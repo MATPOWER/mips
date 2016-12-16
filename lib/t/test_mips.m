@@ -12,7 +12,7 @@ function test_mips(verbose)
 %
 %   This file is part of MIPS.
 %   Covered by the 3-clause BSD License (see LICENSE file for details).
-%   See http://www.pserc.cornell.edu/matpower/ for more info.
+%   See https://github.com/MATPOWER/mips for more info.
 
 if nargin < 1
     verbose = 0;
