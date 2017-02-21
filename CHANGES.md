@@ -4,6 +4,13 @@ Change history for MIPS
 Since last release
 ------------------
 
+#### 2/21/17
+  - Add solver options `'LU'` for explicit LU decomposition with back
+    substitution, `'LU_AMD'` for LU decomposition with approximate
+    minimum degree (AMD) reordering, and `'LU_GP'` for the Gilbert-Peierls
+    algorithm for LU decompostion with AMD reordering.
+    *Thanks to Jose Luis Marin.*
+
 #### 12/21/16
   - Add [Travis-CI][1] integration. *Thanks to Richard Lincoln.*
 
