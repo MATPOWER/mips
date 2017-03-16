@@ -4,7 +4,9 @@ Change history for MIPS
 Since last release
 ------------------
 
-#### 2/21/17
+#### 3/16/17
+  - Move PARDISO options to `opt.pardiso` in preparation for adding
+    options for other solvers.
   - Add solver options `'LU'` for explicit LU decomposition with back
     substitution, `'LU_AMD'` for LU decomposition with approximate
     minimum degree (AMD) reordering, and `'LU_GP'` for the Gilbert-Peierls

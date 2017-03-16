@@ -21,16 +21,16 @@ function [x, info] = mplinsolve(A, b, solver, opt)
 %           'LU_GP' - use Gilbert-Peierls algorithm for LU Decomposition with
 %                  (AMD) reordering (e.g. ideal for power flow Jacobian)
 %           'PARDISO' - PARDISO
-%       OPT    : struct of options, with the following fields
-%                (currently used only by PARDISO, default shown in parens,
-%                 see PARDISO documentation for details)
-%           verbose (0) - true or false
-%           mtype (11)  - matrix type (default is real and nonsymmetric)
-%           solver (0)  - solver method (default is sparse direct)
-%           iparm ([])  - n x 2 matrix of integer parameters
-%               1st, 2nd columns are index, value of parameter respectively
-%           dparm ([])  - n x 2 matrix of double parameters
-%               1st, 2nd columns are index, value of parameter respectively
+%       OPT    : struct of options for certain solvers
+%           pardiso : struct of PARDISO options (default shown in parens),
+%                 see PARDISO documentation for details
+%               verbose (0) - true or false
+%               mtype (11)  - matrix type (default is real and nonsymmetric)
+%               solver (0)  - solver method (default is sparse direct)
+%               iparm ([])  - n x 2 matrix of integer parameters
+%                   1st, 2nd columns are index, value of parameter respectively
+%               dparm ([])  - n x 2 matrix of double parameters
+%                  1st, 2nd columns are index, value of parameter respectively
 
 %   Note: SOLVER can also take value 'LU_GP0' or 'LU_AMD0', both of which
 %         just use permutation matrices instead of permutation vectors,
@@ -103,27 +103,27 @@ switch upper(solver)
         solver = 0;
 
         %% override if provided via opt
-        if ~isempty(opt)
-            if isfield(opt, 'verbose')
-                verbose = opt.verbose;
+        if ~isempty(opt) && isfield(opt, 'pardiso')
+            if isfield(opt.pardiso, 'verbose')
+                verbose = opt.pardiso.verbose;
             end
-            if isfield(opt, 'mtype')
-                mtype = opt.mtype;
+            if isfield(opt.pardiso, 'mtype')
+                mtype = opt.pardiso.mtype;
             end
-            if isfield(opt, 'solver')
-                solver = opt.solver;
+            if isfield(opt.pardiso, 'solver')
+                solver = opt.pardiso.solver;
             end
         end
 
         %% begin setup and solve
         info = pardisoinit(mtype, solver);
         info.iparm(3) = num_threads;
-        if ~isempty(opt)
-            if isfield(opt, 'iparm') && ~isempty(opt.iparm)
-                info.iparm(opt.iparm(:, 1)) = opt.iparm(:, 2);
+        if ~isempty(opt) && isfield(opt, 'pardiso')
+            if isfield(opt.pardiso, 'iparm') && ~isempty(opt.pardiso.iparm)
+                info.iparm(opt.pardiso.iparm(:, 1)) = opt.pardiso.iparm(:, 2);
             end
-            if isfield(opt, 'dparm') && ~isempty(opt.dparm)
-                info.iparm(opt.dparm(:, 1)) = opt.dparm(:, 2);
+            if isfield(opt.pardiso, 'dparm') && ~isempty(opt.pardiso.dparm)
+                info.iparm(opt.pardiso.dparm(:, 1)) = opt.pardiso.dparm(:, 2);
             end
         end
         info = pardisoreorder(A, info, verbose);
