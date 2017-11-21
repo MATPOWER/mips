@@ -217,7 +217,7 @@ the existing MIPS test files (e.g. [`t_mips`](lib/t/t_mips.m)) for
 examples of how to write tests.
 
 You can run your tests by typing the name of your test function at the
-Matlab or Octave prompt, or `test_mips` to run the entire test suite.
+MATLAB or Octave prompt, or `test_mips` to run the entire test suite.
 
 ### Sharing your changes
 

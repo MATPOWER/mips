@@ -36,7 +36,7 @@ function [x, info] = mplinsolve(A, b, solver, opt)
 %                   used for 4 or 5 output args, Gilbert-Peierls algorithm
 %                   with AMD ordering for 3 output args.
 %               vec (1)  - use permutation vectors instead of matrices
-%                   (permutation matrices used by default for Matlab < 7.3)
+%                   (permutation matrices used by default for MATLAB < 7.3)
 %               thresh   - pivot threshold, see 'help lu' for details
 %           pardiso : struct of PARDISO options (default shown in parens),
 %                 see PARDISO documentation for details
@@ -211,7 +211,7 @@ function TorF = have_lu_vec()
 % Checks whether or not LU supports lu(..., 'vector') syntax
 persistent lu_vec;      %% cache the result for performance reasons
 if isempty(lu_vec)
-    lu_vec = 1;         %% assume it does, unless this is Matlab ver < 7.3
+    lu_vec = 1;         %% assume it does, unless this is MATLAB ver < 7.3
     v = ver('matlab');
     if length(v) > 1
         warning('The built-in VER command is behaving strangely, probably as a result of installing a 3rd party toolbox in a directory named ''matlab'' on your path. Check each element of the output of ver(''matlab'') to find the offending toolbox, then move the toolbox to a more appropriately named directory.');
