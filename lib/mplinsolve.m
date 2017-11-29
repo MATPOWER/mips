@@ -187,20 +187,36 @@ switch solver
         end
 
         %% begin setup and solve
-        info = pardisoinit(mtype, solver);
-        info.iparm(3) = num_threads;
+        v6 = have_pardiso_object();
+        if v6               %% PARDISO v6
+            id = 1;
+            p = pardiso(id, mtype, solver);
+            if verbose
+                p.verbose();
+            end
+        else                %% PARDISO v5
+            p = pardisoinit(mtype, solver);
+        end
+        p.iparm(3) = num_threads;
         if ~isempty(opt) && isfield(opt, 'pardiso')
             if isfield(opt.pardiso, 'iparm') && ~isempty(opt.pardiso.iparm)
-                info.iparm(opt.pardiso.iparm(:, 1)) = opt.pardiso.iparm(:, 2);
+                p.iparm(opt.pardiso.iparm(:, 1)) = opt.pardiso.iparm(:, 2);
             end
             if isfield(opt.pardiso, 'dparm') && ~isempty(opt.pardiso.dparm)
-                info.dparm(opt.pardiso.dparm(:, 1)) = opt.pardiso.dparm(:, 2);
+                p.dparm(opt.pardiso.dparm(:, 1)) = opt.pardiso.dparm(:, 2);
             end
         end
-        info = pardisoreorder(A, info, verbose);
-        info = pardisofactor(A, info, verbose);
-        [x, info] = pardisosolve(A, b, info, verbose);
-        pardisofree(info);
+        if v6
+            p.factorize(id, A);
+            x = p.solve(id, A, b);
+            p.free(id);
+            p.clear();
+        else
+            p = pardisoreorder(A, p, verbose);
+            p = pardisofactor(A, p, verbose);
+            [x, p] = pardisosolve(A, b, p, verbose);
+            pardisofree(p);
+        end
     otherwise
         warning('mplinsolve: ''%s'' is not a valid value for SOLVER, using default.', solver);
         x = A \ b;
@@ -225,6 +241,15 @@ if isempty(lu_vec)
     end
 end
 TorF = lu_vec;
+
+
+function TorF = have_pardiso_object()
+% Checks for availability of PARDISO 6
+persistent pardiso_object;    %% cache the result for performance reasons
+if isempty(pardiso_object)
+    pardiso_object = exist('pardiso', 'file') == 2;
+end
+TorF = pardiso_object;
 
 
 function num = vstr2num_(vstr)

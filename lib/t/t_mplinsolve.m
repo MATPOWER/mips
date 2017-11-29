@@ -505,6 +505,28 @@ t_end;
 
 
 function TorF = have_pardiso()
+TorF = have_pardiso_object() ||  have_pardiso_legacy();
+
+function TorF = have_pardiso_object()
+TorF = exist('pardiso', 'file') == 2;
+if TorF
+    try
+        id = 1;
+        A = sparse([1 2; 3 4]);
+        b = [1;1];
+        p = pardiso(id, 1, 0);
+        p.factorize(id, A);
+        x = p.solve(id, A, b);
+        p.free(id);
+        if any(x ~= [-1; 1])
+            TorF = 0;
+        end
+    catch
+        TorF = 0;
+    end
+end
+
+function TorF = have_pardiso_legacy()
 TorF = exist('pardisoinit', 'file') == 3 && ...
         exist('pardisoreorder', 'file') == 3 && ...
         exist('pardisofactor', 'file') == 3 && ...
