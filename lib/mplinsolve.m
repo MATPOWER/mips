@@ -194,7 +194,7 @@ switch solver
                 info.iparm(opt.pardiso.iparm(:, 1)) = opt.pardiso.iparm(:, 2);
             end
             if isfield(opt.pardiso, 'dparm') && ~isempty(opt.pardiso.dparm)
-                info.iparm(opt.pardiso.dparm(:, 1)) = opt.pardiso.dparm(:, 2);
+                info.dparm(opt.pardiso.dparm(:, 1)) = opt.pardiso.dparm(:, 2);
             end
         end
         info = pardisoreorder(A, info, verbose);
