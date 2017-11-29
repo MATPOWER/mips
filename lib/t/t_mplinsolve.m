@@ -477,10 +477,14 @@ t_is(x, ex, 12, t);
 
 t = 'PARDISO';
 if exist('have_fcn', 'file') && have_fcn('pardiso') || have_pardiso()
-    x = mplinsolve(A, b, 'PARDISO', struct('solver', 0));
+    vb = false;
+
+    opt = struct('pardiso', struct('solver', 0, 'verbose', vb));
+    x = mplinsolve(A, b, 'PARDISO', opt);
     t_is(x, ex, 12, [t ' : direct']);
 
-    [x, info] = mplinsolve(A, b, 'PARDISO', struct('solver', 1));
+    opt = struct('pardiso', struct('solver', 1, 'verbose', vb));
+    [x, info] = mplinsolve(A, b, 'PARDISO', opt);
     t_is(x, ex, 1, [t ' : iterative']);
 else
     t_skip(2, [t ' not available']);

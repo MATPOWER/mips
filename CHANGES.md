@@ -6,6 +6,7 @@ Since last release
 
 #### 11/29/17
   - Fix typo preventing `pardiso.dparm` options from being set.
+  - Fix incorrect use of PARDISO options in `t_mplinsolve()`.
 
 #### 3/16/17
   - Move `mplinsolve` PARDISO options to `opt.pardiso` in preparation
