@@ -518,6 +518,7 @@ if TorF
         p.factorize(id, A);
         x = p.solve(id, A, b);
         p.free(id);
+        p.clear();
         if any(x ~= [-1; 1])
             TorF = 0;
         end
