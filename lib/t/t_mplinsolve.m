@@ -13,7 +13,7 @@ if nargin < 1
     quiet = 0;
 end
 
-t_begin(21, quiet);
+t_begin(42, quiet);
 
 isoctave = exist('OCTAVE_VERSION', 'builtin') == 5;
 if isoctave
@@ -406,95 +406,118 @@ ex = [
 0.0007894844305239289;
 ];
 
-t = '''''';
+t = ''''' : ';
 x = mplinsolve(A, b, '');
-t_is(x, ex, 12, t);
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
 
-t = '\';
+t = '\ : ';
 x = mplinsolve(A, b, '\');
-t_is(x, ex, 12, t);
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
 
-t = 'LU';
+t = 'LU : ';
 x = mplinsolve(A, b, 'LU');
-t_is(x, ex, 12, t);
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
 
-t = 'LU3';
+t = 'LU3 : ';
 x = mplinsolve(A, b, 'LU3');
-t_is(x, ex, 12, t);
-t = 'LU, nout = 3, vec = 1, thresh = 1';
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+t = 'LU, nout = 3, vec = 1, thresh = 1 : ';
 opt = struct('nout', 3, 'vec', 1, 'thresh', 1);
 x = mplinsolve(A, b, 'LU', opt);
-t_is(x, ex, 12, t);
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
 
-t = 'LU3a';
+t = 'LU3a : ';
 x = mplinsolve(A, b, 'LU3a');
-t_is(x, ex, 12, t);
-t = 'LU, nout = 3, vec = 1';
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+t = 'LU, nout = 3, vec = 1 : ';
 opt = struct('nout', 3, 'vec', 1);
 x = mplinsolve(A, b, 'LU', opt);
-t_is(x, ex, 12, t);
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
 
-t = 'LU4';
+t = 'LU4 : ';
 x = mplinsolve(A, b, 'LU4');
-t_is(x, ex, 12, t);
-t = 'LU, nout = 4, vec = 1';
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+t = 'LU, nout = 4, vec = 1 : ';
 opt = struct('nout', 4, 'vec', 1);
 x = mplinsolve(A, b, 'LU', opt);
-t_is(x, ex, 12, t);
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
 
-t = 'LU5';
+t = 'LU5 : ';
 x = mplinsolve(A, b, 'LU5');
-t_is(x, ex, 12, t);
-t = 'LU, nout = 5, vec = 1';
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+t = 'LU, nout = 5, vec = 1 : ';
 opt = struct('nout', 5, 'vec', 1);
 x = mplinsolve(A, b, 'LU', opt);
-t_is(x, ex, 12, t);
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
 
-t = 'LU3m';
+t = 'LU3m : ';
 x = mplinsolve(A, b, 'LU3m');
-t_is(x, ex, 12, t);
-t = 'LU, nout = 3, vec = 0, thresh = 1';
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+t = 'LU, nout = 3, vec = 0, thresh = 1 : ';
 opt = struct('nout', 3, 'vec', 0, 'thresh', 1);
 x = mplinsolve(A, b, 'LU', opt);
-t_is(x, ex, 12, t);
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
 
-t = 'LU3am';
+t = 'LU3am : ';
 x = mplinsolve(A, b, 'LU3am');
-t_is(x, ex, 12, t);
-t = 'LU, nout = 3, vec = 0';
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+t = 'LU, nout = 3, vec = 0 : ';
 opt = struct('nout', 3, 'vec', 0);
 x = mplinsolve(A, b, 'LU', opt);
-t_is(x, ex, 12, t);
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
 
-t = 'LU4m';
+t = 'LU4m : ';
 x = mplinsolve(A, b, 'LU4m');
-t_is(x, ex, 12, t);
-t = 'LU, nout = 4, vec = 0';
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+t = 'LU, nout = 4, vec = 0 : ';
 opt = struct('nout', 4, 'vec', 0);
 x = mplinsolve(A, b, 'LU', opt);
-t_is(x, ex, 12, t);
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
 
-t = 'LU5m';
+t = 'LU5m : ';
 x = mplinsolve(A, b, 'LU5m');
-t_is(x, ex, 12, t);
-t = 'LU, nout = 5, vec = 0';
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+t = 'LU, nout = 5, vec = 0 : ';
 opt = struct('nout', 5, 'vec', 0);
 x = mplinsolve(A, b, 'LU', opt);
-t_is(x, ex, 12, t);
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
 
-t = 'PARDISO';
+%% PARDISO
 if exist('have_fcn', 'file') && have_fcn('pardiso') || have_pardiso()
     vb = false;
 
+    t = 'PARDISO (direct) : ';
     opt = struct('pardiso', struct('solver', 0, 'verbose', vb));
     x = mplinsolve(A, b, 'PARDISO', opt);
-    t_is(x, ex, 12, [t ' : direct']);
+    t_is(x, ex, 6, [t 'x']);
+    t_is(norm(b - A*x), 0, 6, [t '||b - A*x||']);
 
+    t = 'PARDISO (iterative) : ';
     opt = struct('pardiso', struct('solver', 1, 'verbose', vb));
     [x, info] = mplinsolve(A, b, 'PARDISO', opt);
-    t_is(x, ex, 1, [t ' : iterative']);
+    t_is(x, ex, 1, [t 'x']);
+    t_is(norm(b - A*x), 0, 2, [t '||b - A*x||']);
 else
-    t_skip(2, [t ' not available']);
+    t_skip(4, [t ' not available']);
 end
 
 if isoctave
@@ -505,7 +528,7 @@ t_end;
 
 
 function TorF = have_pardiso()
-TorF = have_pardiso_object() ||  have_pardiso_legacy();
+TorF = have_pardiso_object() || have_pardiso_legacy();
 
 function TorF = have_pardiso_object()
 TorF = exist('pardiso', 'file') == 2;
