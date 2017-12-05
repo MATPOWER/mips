@@ -405,6 +405,7 @@ hist(i+1) = struct('feascond', feascond, 'gradcond', gradcond, ...
     'stepsize', 0, 'obj', f/opt.cost_mult, 'alphap', 0, 'alphad', 0);
 if strcmp(upper(opt.linsolver), 'PARDISO')
     ls = 'PARDISO';
+    mplinsolve_opt = struct('pardiso', struct('mtype', -2));
     if ~have_fcn('pardiso')
         warning('mips: PARDISO linear solver not available, using default');
         opt.linsolver = '';
@@ -412,6 +413,7 @@ if strcmp(upper(opt.linsolver), 'PARDISO')
     end
 else
     ls = 'built-in';
+    mplinsolve_opt = [];
 end
 if opt.verbose
     if opt.step_control, s = '-sc'; else, s = ''; end
@@ -454,7 +456,7 @@ while (~converged && i < opt.max_it)
     dh_zinv = dh * zinvdiag;
     M = Lxx + dh_zinv * mudiag * dh';
     N = Lx + dh_zinv * (mudiag * h + gamma * e);
-    dxdlam = mplinsolve([M dg; dg' sparse(neq, neq)], [-N; -g], opt.linsolver, []);
+    dxdlam = mplinsolve([M dg; dg' sparse(neq, neq)], [-N; -g], opt.linsolver, mplinsolve_opt);
 %     AAA = [
 %         M  dg;
 %         dg'  sparse(neq, neq)
