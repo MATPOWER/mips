@@ -185,10 +185,12 @@ switch solver
                 solver = opt.pardiso.solver;
             end
         end
+% mtype = 11;
+% verbose = 1;
 
         %% begin setup and solve
         v6 = have_pardiso_object();
-        if v6               %% PARDISO v6
+        if v6               %% PARDISO v6+
             id = 1;
             p = pardiso(id, mtype, solver);
             if verbose
@@ -204,6 +206,19 @@ switch solver
             end
             if isfield(opt.pardiso, 'dparm') && ~isempty(opt.pardiso.dparm)
                 p.dparm(opt.pardiso.dparm(:, 1)) = opt.pardiso.dparm(:, 2);
+            end
+        end
+        if v6 || abs(mtype) == 2 || mtype == 6  %% need non-zero diagonal
+            nx = size(A, 1);
+            k = find(diag(A) == 0);
+            if abs(mtype) == 2 || mtype == 6    %% symmetric
+                myeps = eps;
+                adj = sparse(k, k, myeps, nx, nx);
+                A = tril(A+A')./2 + adj;
+            else                                %% non-symmetric
+                myeps = 1e-8;
+                adj = sparse(k, k, myeps, nx, nx);
+                A = A + adj;
             end
         end
         if v6

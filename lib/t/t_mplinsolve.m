@@ -13,7 +13,7 @@ if nargin < 1
     quiet = 0;
 end
 
-t_begin(42, quiet);
+t_begin(44, quiet);
 
 isoctave = exist('OCTAVE_VERSION', 'builtin') == 5;
 if isoctave
@@ -503,21 +503,32 @@ t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
 
 %% PARDISO
 if exist('have_fcn', 'file') && have_fcn('pardiso') || have_pardiso()
+    if have_pardiso_object()
+        tols = [6 6 13 13 6 5];     %% tolerances for PARDISO v6
+    else
+        tols = [13 13 13 13 1 2];   %% tolerances for PARDISO v5
+    end
     vb = false;
 
     t = 'PARDISO (direct) : ';
     opt = struct('pardiso', struct('solver', 0, 'verbose', vb));
     x = mplinsolve(A, b, 'PARDISO', opt);
-    t_is(x, ex, 6, [t 'x']);
-    t_is(norm(b - A*x), 0, 6, [t '||b - A*x||']);
+    t_is(x, ex, tols(1), [t 'x']);
+    t_is(norm(b - A*x), 0, tols(2), [t '||b - A*x||']);
+
+    t = 'PARDISO (direct, symmetric indefinite) : ';
+    opt = struct('pardiso', struct('solver', 0, 'mtype', -2, 'verbose', vb));
+    x = mplinsolve(A, b, 'PARDISO', opt);
+    t_is(x, ex, tols(3), [t 'x']);
+    t_is(norm(b - A*x), 0, tols(4), [t '||b - A*x||']);
 
     t = 'PARDISO (iterative) : ';
     opt = struct('pardiso', struct('solver', 1, 'verbose', vb));
     [x, info] = mplinsolve(A, b, 'PARDISO', opt);
-    t_is(x, ex, 1, [t 'x']);
-    t_is(norm(b - A*x), 0, 2, [t '||b - A*x||']);
+    t_is(x, ex, tols(5), [t 'x']);
+    t_is(norm(b - A*x), 0, tols(6), [t '||b - A*x||']);
 else
-    t_skip(4, [t ' not available']);
+    t_skip(6, [t ' not available']);
 end
 
 if isoctave
