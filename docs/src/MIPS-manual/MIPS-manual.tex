@@ -964,6 +964,7 @@ name & description \\
 \code{~~~~mips\_example2}	& implements example 2 from \mips{} User's Manual	\\
 \code{~~~~test\_mips}	& runs full \mips{} test suite	\\
 \code{~~~~t\_mips}	& runs tests for \mips{} NLP solver	\\
+\code{~~~~t\_mips\_pardiso}	& runs tests for \mips{} NLP solver, using PARDISO as linear solver	\\
 \code{~~~~t\_mplinsolve}	& tests for \code{mplinsolve}	\\
 \code{~~~~t\_qps\_mips}	& runs tests for \code{qps\_mips}	\\
 \bottomrule
@@ -1002,6 +1003,7 @@ The \href{http://www.pserc.cornell.edu/matpower/docs/MIPS-manual-1.3.pdf}{\mips{
 
 \subsubsection*{New Features}
 \begin{itemize}
+\item Add support for PARDISO 6.x.
 \item Add \code{mplinsolve} solver option \codeq{LU} for explicit LU decomposition with back substitution, with options in \code{opt.lu} for specifying the number of output arguments in call to \code{lu} (\code{opt.lu.nout}), whether to use permutation vectors or matrices (\code{opt.lu.vec}) and pivot threshold options (\code{opt.lu.thresh}). The following values for the \code{solver} argument act as shortcuts for specifying various combinations of options: \codeq{LU3} \codeq{LU3a} \codeq{LU4} \codeq{LU5} \codeq{LU3m} \codeq{LU3am} \codeq{LU4m} \codeq{LU5m}.
     See \code{help mplinsolve} for details.
     \emph{Thanks to Jose Luis Mar\'in.}
@@ -1009,7 +1011,7 @@ The \href{http://www.pserc.cornell.edu/matpower/docs/MIPS-manual-1.3.pdf}{\mips{
 
 \subsubsection*{Bugs Fixed}
 \begin{itemize}
-\item 
+\item Fix bug preventing \code{pardiso.dparm} options from being set.
 \end{itemize}
 
 \subsubsection*{Other Changes}

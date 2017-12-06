@@ -4,6 +4,9 @@ Change history for MIPS
 Since last release
 ------------------
 
+#### 9/10/18
+  - Add support for PARDISO v6.x.
+
 #### 5/7/18
   - Ignore warnings from Octave 4.4 about calling `lu` with less
     than 4 outputs and a sparse input.
@@ -11,7 +14,6 @@ Since last release
 #### 11/29/17
   - Fix typo preventing `pardiso.dparm` options from being set.
   - Fix incorrect use of PARDISO options in `t_mplinsolve()`.
-  - Add preliminary support for PARDISO v6.x.
 
 #### 3/16/17
   - Move `mplinsolve` PARDISO options to `opt.pardiso` in preparation
