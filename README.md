@@ -112,4 +112,4 @@ MIPS is distributed under the [3-clause BSD license][9].
 [7]: https://github.com/MATPOWER/mips/blob/master/docs/MIPS-manual.pdf
 [8]: CONTRIBUTING.md
 [9]: LICENSE
-[10]: http://dx.doi.org/10.1109/TPWRS.2007.901301
+[10]: https://doi.org/10.1109/TPWRS.2007.901301
