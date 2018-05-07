@@ -15,6 +15,13 @@ end
 
 t_begin(21, quiet);
 
+isoctave = exist('OCTAVE_VERSION', 'builtin') == 5;
+if isoctave
+    lu_warning_id = 'Octave:lu:sparse_input';
+    s = warning('query', lu_warning_id);
+    warning('off', lu_warning_id);
+end
+
 ijs = [
     1 1 1205.63;
     4 1 -1205.63;
@@ -488,6 +495,10 @@ if exist('have_fcn', 'file') && have_fcn('pardiso') || have_pardiso()
     t_is(x, ex, 1, [t ' : iterative']);
 else
     t_skip(2, [t ' not available']);
+end
+
+if isoctave
+    warning(s.state, lu_warning_id);
 end
 
 t_end;
