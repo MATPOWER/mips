@@ -87,7 +87,7 @@ acknowledge that fact by citing [reference \[1\]][10] above, namely:
 
 >   H. Wang, C. E. Murillo-Sánchez, R. D. Zimmerman, R. J. Thomas,
     "On Computational Issues of Market-Based Optimal Power Flow,"
-     Power Systems, IEEE Transactions on*, vol. 22, no. 3,
+     *Power Systems, IEEE Transactions on*, vol. 22, no. 3,
      pp. 1185-1193, Aug. 2007.
 
 
