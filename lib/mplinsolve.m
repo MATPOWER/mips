@@ -49,7 +49,7 @@ function [x, info] = mplinsolve(A, b, solver, opt)
 %                  1st, 2nd columns are index, value of parameter respectively
 
 %   MIPS
-%   Copyright (c) 2015-2017, Power Systems Engineering Research Center (PSERC)
+%   Copyright (c) 2015-2018, Power Systems Engineering Research Center (PSERC)
 %   by Ray Zimmerman, PSERC Cornell
 %
 %   This file is part of MIPS.
@@ -159,47 +159,35 @@ switch solver
                 end
         end
     case {'PARDISO'}
-        %% get number of threads from OpenMP env variable
-        persistent num_threads;
-        if isempty(num_threads)
-            num_threads = str2num(getenv('OMP_NUM_THREADS'));
-            if ~num_threads
-                num_threads = 1;
-            end
-        end
-
         %% set default options
         verbose = false;
         mtype = 11;
-        solver = 0;
+        pardiso_solver = 0;
 
         %% override if provided via opt
         if ~isempty(opt) && isfield(opt, 'pardiso')
-            if isfield(opt.pardiso, 'verbose')
-                verbose = opt.pardiso.verbose;
+            if isfield(opt.pardiso, 'verbose') && opt.pardiso.verbose
+                verbose = true;
             end
             if isfield(opt.pardiso, 'mtype')
                 mtype = opt.pardiso.mtype;
             end
             if isfield(opt.pardiso, 'solver')
-                solver = opt.pardiso.solver;
+                pardiso_solver = opt.pardiso.solver;
             end
         end
-% mtype = 11;
-% verbose = 1;
 
         %% begin setup and solve
         v6 = have_pardiso_object();
         if v6               %% PARDISO v6+
             id = 1;
-            p = pardiso(id, mtype, solver);
+            p = pardiso(id, mtype, pardiso_solver);
             if verbose
                 p.verbose();
             end
         else                %% PARDISO v5
-            p = pardisoinit(mtype, solver);
+            p = pardisoinit(mtype, pardiso_solver);
         end
-        p.iparm(3) = num_threads;
         if ~isempty(opt) && isfield(opt, 'pardiso')
             if isfield(opt.pardiso, 'iparm') && ~isempty(opt.pardiso.iparm)
                 p.iparm(opt.pardiso.iparm(:, 1)) = opt.pardiso.iparm(:, 2);
@@ -210,16 +198,13 @@ switch solver
         end
         if v6 || abs(mtype) == 2 || mtype == 6  %% need non-zero diagonal
             nx = size(A, 1);
-            k = find(diag(A) == 0);
             if abs(mtype) == 2 || mtype == 6    %% symmetric
-                myeps = eps;
-                adj = sparse(k, k, myeps, nx, nx);
-                A = tril(A+A')./2 + adj;
+                myeps = 1e-14;
+                A = tril(A);
             else                                %% non-symmetric
                 myeps = 1e-8;
-                adj = sparse(k, k, myeps, nx, nx);
-                A = A + adj;
             end
+            A = A + myeps * speye(nx, nx);
         end
         if v6
             p.factorize(id, A);
