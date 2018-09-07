@@ -175,7 +175,7 @@ function [x, f, eflag, output, lambda] = mips(f_fcn, x0, A, l, u, xmin, xmax, gh
 %     pp. 1185-1193.
 
 %   MIPS
-%   Copyright (c) 2009-2016, Power Systems Engineering Research Center (PSERC)
+%   Copyright (c) 2009-2018, Power Systems Engineering Research Center (PSERC)
 %   by Ray Zimmerman, PSERC Cornell
 %
 %   This file is part of MIPS.
@@ -405,7 +405,15 @@ hist(i+1) = struct('feascond', feascond, 'gradcond', gradcond, ...
     'stepsize', 0, 'obj', f/opt.cost_mult, 'alphap', 0, 'alphad', 0);
 if strcmp(upper(opt.linsolver), 'PARDISO')
     ls = 'PARDISO';
-    mplinsolve_opt = struct('pardiso', struct('mtype', -2));
+    mplinsolve_opt = struct('pardiso', ...
+                            struct('mtype', -2, ...
+                                   'iparm', [8, 1;  %% max it refinement steps
+                                             10, 12;%% eps pivot
+                                             11, 1; %% use scaling vectors
+                                             13, 2; %% improved accuracy
+                                             18, 0; %% do not determine nnz in LU
+                                             21, 3; %% ? undocumented pivoting
+                                             ] ));
     if ~have_fcn('pardiso')
         warning('mips: PARDISO linear solver not available, using default');
         opt.linsolver = '';
