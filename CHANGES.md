@@ -1,8 +1,12 @@
 Change history for MIPS
 =======================
 
-Since last release
-------------------
+
+Version 1.3 - *Oct 25, 2018*
+----------------------------
+
+#### 10/25/18
+  - Release 1.3.
 
 #### 9/10/18
   - Add support for PARDISO v6.x.
