@@ -1,5 +1,7 @@
-What's New in Version 1.3
--------------------------
+What's New in MIPS 1.3
+----------------------
+
+#### Released Oct 30, 2018
 
 Below is a summary of the changes since version 1.2.2 of MIPS. See the
 [`CHANGES.md`][1] file for all the gory details. For release notes for
