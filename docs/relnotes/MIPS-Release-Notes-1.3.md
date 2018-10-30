@@ -18,10 +18,11 @@ previous versions, see Appendix C of the [MIPS User's Manual][2].
     See `help mplinsolve` for details.
     *Thanks to Jose Luis Marin.*
 
-#### Bugs fixed:
+#### Bugs Fixed:
   - Fix bug preventing `pardiso.dparm` options from being set.
 
 #### Other Changes:
+  - LaTeX source code for [MIPS User's Manual][2] included in `docs/src`.
   - Move `mplinsolve` PARDISO options to `opt.pardiso` in preparation
     for adding options for other solvers.
 
