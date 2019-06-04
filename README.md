@@ -71,7 +71,7 @@ Publications
      ["On Computational Issues of Market-Based Optimal Power Flow,"][10]
      *Power Systems, IEEE Transactions on*, vol. 22, no. 3,
      pp. 1185-1193, Aug. 2007.  
-     DOI: [10.1109/TPWRS.2007.901301][10].
+     doi: [10.1109/TPWRS.2007.901301][10].
 
 2.  H. Wang, *On the Computation and Application of Multi-period
     Security-constrained Optimal Power Flow for Real-time Electricity
