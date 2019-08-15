@@ -378,7 +378,7 @@ z   = z0 * ones(niq, 1);
 mu  = z;
 k = find(h < -z0);
 z(k) = -h(k);
-k = find(gamma / z > z0);   %% (seems k is always empty if gamma = z0 = 1)
+k = find(gamma ./ z > z0);  %% (seems k is always empty if gamma = z0 = 1)
 if ~isempty(k)
     mu(k) = gamma / z(k);
 end

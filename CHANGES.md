@@ -2,12 +2,20 @@ Change history for MIPS
 =======================
 
 
+since latest release
+--------------------
+
+#### 8/15/19
+  - Fix bug in initialization of `mu` that resulted in fatal error
+    in `t_mips` for some versions of MATLAB (e.g. R2013b on Mac).
+
+
 Version 1.3.1 - *Jun 20, 2019*
 ------------------------------
 
 #### 6/20/19
   - Release 1.3.1.
-  - Add CITATION file.
+  - Add `CITATION` file.
   - Other miscellaneous documentation updates, e.g. MATPOWER website
     links updated to https://matpower.org.
 
