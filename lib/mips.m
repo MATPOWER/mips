@@ -44,6 +44,9 @@ function [x, f, eflag, output, lambda] = mips(f_fcn, x0, A, l, u, xmin, xmax, gh
 %           all of which are also optional (default values shown in
 %           parentheses)
 %           verbose (0) - controls level of progress output displayed
+%               0 = no progress output
+%               1 = some progress output
+%               2 = verbose progress output
 %           linsolver ('') - linear system solver for solving update steps
 %               ''          = default solver (currently same as '\')
 %               '\'         = built-in \ operator
