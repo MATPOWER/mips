@@ -178,7 +178,7 @@ function [x, f, eflag, output, lambda] = mips(f_fcn, x0, A, l, u, xmin, xmax, gh
 %     pp. 1185-1193.
 
 %   MIPS
-%   Copyright (c) 2009-2018, Power Systems Engineering Research Center (PSERC)
+%   Copyright (c) 2009-2020, Power Systems Engineering Research Center (PSERC)
 %   by Ray Zimmerman, PSERC Cornell
 %
 %   This file is part of MIPS.
@@ -417,11 +417,6 @@ if strcmp(upper(opt.linsolver), 'PARDISO')
                                              18, 0; %% do not determine nnz in LU
                                              21, 3; %% ? undocumented pivoting
                                              ] ));
-    if ~have_fcn('pardiso')
-        warning('mips: PARDISO linear solver not available, using default');
-        opt.linsolver = '';
-        ls = 'built-in';
-    end
 else
     ls = 'built-in';
     mplinsolve_opt = [];

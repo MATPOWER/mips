@@ -5,6 +5,14 @@ Change history for MIPS
 since latest release
 --------------------
 
+#### 4/23/20
+  - Remove additional `have_fcn()` dependencies in `mips()`,
+    `t_mips_pardiso()` and `t_qps_mips()`.
+  - **INCOMPATIBLE CHANGE**: Calling `mips()` with `opt.linsolver`
+    set to `'PARDISO'` now results in a fatal error if PARDISO is not
+    installed, rather than warning and continuing with the default
+    linear solver.
+
 #### 8/15/19
   - Fix bug in initialization of `mu` that resulted in fatal error
     in `t_mips` for some versions of MATLAB (e.g. R2013b on Mac).
