@@ -11,11 +11,15 @@ addons:
     - liboctave-dev
     - octave        # octave 4.2.2
     update: true
+  homebrew:
+    packages:
+    - octave        # octave 5.1.0
+    update: true
+os:
+- linux
+- osx
 
 install:
-# - sudo apt-add-repository -y ppa:octave/stable
-# - sudo apt-get update -qq
-# - sudo apt-get install -qq octave liboctave-dev
 - git clone --depth=50 https://github.com/MATPOWER/mptest.git $TRAVIS_BUILD_DIR/mptest
 
 env:
@@ -27,4 +31,5 @@ env:
 script:
 - octave-cli --no-gui -p $SEARCH_PATH --eval ver
 - octave-cli --no-gui -p $SEARCH_PATH --eval "test_mptest(0,1)"
+- octave-cli --no-gui -p $SEARCH_PATH --eval mipsver
 - octave-cli --no-gui -p $SEARCH_PATH --eval "test_mips(0,1)"
