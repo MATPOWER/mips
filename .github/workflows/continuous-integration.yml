@@ -19,8 +19,7 @@ jobs:
         sudo apt-get update -qq
     - name: Initialize Package Manager (Mac)
       if: startsWith(matrix.os, 'macos')
-      run: |
-        brew update
+      run: brew update
     - name: Install GNU Octave (Linux)
       if: startsWith(matrix.os, 'ubuntu')
       run: |
@@ -31,13 +30,15 @@ jobs:
       run: |
         brew install octave
         octave-cli --no-gui --eval ver
-    - name: Install/Test MP-Test
+    - name: Install MP-Test, Set MPTEST_PATH
       run: |
         git clone --depth=50 https://github.com/MATPOWER/mptest.git $HOME/mptest
-        octave-cli --no-gui --eval "addpath('$HOME/mptest/lib', '$HOME/mptest/lib/t'); savepath"
-        octave-cli --no-gui --eval "test_mptest(0,1)"
-    - name: Install/Test MIPS
+        echo "::set-env name=MPTEST_PATH::$HOME/mptest/lib:$HOME/mptest/lib/t"
+    - name: Set MIPS_PATH
+      run: echo "::set-env name=MIPS_PATH::${GITHUB_WORKSPACE}/lib:${GITHUB_WORKSPACE}/lib/t:${MPTEST_PATH}"
+    - name: Test MP-Test
+      run: octave-cli --no-gui -p $MPTEST_PATH --eval "test_mptest(0,1)"
+    - name: Test MIPS
       run: |
-        octave-cli --no-gui --eval "addpath('$GITHUB_WORKSPACE/lib', '$GITHUB_WORKSPACE/lib/t'); savepath"
-        octave-cli --no-gui --eval mipsver
-        octave-cli --no-gui --eval "test_mips(0,1)"
+        octave-cli --no-gui -p $MIPS_PATH --eval mipsver
+        octave-cli --no-gui -p $MIPS_PATH --eval "test_mips(0,1)"
