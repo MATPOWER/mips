@@ -19,6 +19,9 @@ System Requirements
 Installation
 ------------
 
+_**Note for [MATPOWER][3] users:** MIPS is included when you install
+[MATPOWER][3]. There is generally no need to install it separately._
+
 Installation and use of MIPS requires familiarity with the basic operation
 of MATLAB or Octave, including setting up your MATLAB path.
 
@@ -33,7 +36,7 @@ of MATLAB or Octave, including setting up your MATLAB path.
     *   `<MIPS>/lib`
     *   `<MIPS>/lib/t`
 
-3.  At the MATLAB prompt, type `test_mips` to run the test suite and
+3.  At the MATLAB/Octave prompt, type `test_mips` to run the test suite and
     verify that MIPS is properly installed and functioning. (Note: The
     tests require a functioning installation of [MP-Test][6]) The result
     should resemble the following:
