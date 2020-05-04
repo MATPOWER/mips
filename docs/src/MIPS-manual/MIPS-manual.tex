@@ -369,11 +369,16 @@ In this manual, references to \matlab{} usually apply to Octave as well.
 \subsection{Installation}
 \label{sec:installation}
 
+{\bf Note to \matpower{} users:} \emph{\mips{} and its prerequisite, \mptest{}, are included when you install \matpower{}. There is generally no need to install them separately. You can skip directly to step 3 to verify.}
+
+~
+
 Installation and use of \mips{} requires familiarity with the basic operation of \matlab{} or Octave, including setting up your \matlab{} path.
 
 \begin{enumerate}[\bfseries Step 1:] % requires package paralist
 \item Clone the repository or download and extract the zip file of the \mips{} distribution from the \href{\mipsurl{}}{\mips{} project page}\footnote{\url{\mipsurl}} to the location of your choice. The files in the resulting \code{mips} or \code{mipsXXX} directory, where \code{XXX} depends on the version of \mips{}, should not need to be modified, so it is recommended that they be kept separate from your own code.
 We will use \mipspath{} to denote the path to this directory.
+\clearpage
 \item Add the following directories to your \matlab{} or Octave path:
 \begin{itemize}
 \item \mipspath{/lib} -- core \mips{} functions
@@ -706,9 +711,7 @@ Aside from \code{H} and \code{c}, all input and output arguments correspond exac
 
 As with \code{mips} and \code{fmincon}, the primary difference between the calling syntax for \code{qps\_mips} and \code{quadprog} is that the linear constraints are specified in terms of a single doubly-bounded linear function ($l \le A x \le u$) as opposed to separate equality constrained ($A_{eq} x = b_{eq}$) and upper bounded ($A x \le b$) functions.
 
-\mips{} also includes another wrapper function \code{qps\_matpower} that provides a consistent interface for all of the QP and LP solvers it has available. This interface is identical to that used by \code{qps\_mips} with the exception of the structure of the \code{opt} input argument. The solver is chosen according to the value of \code{opt.alg}. See the help for \code{qps\_matpower} for details.
-
-Several examples of using \code{qps\_matpower} to solve LP and QP problems can be found in \code{t\_qps\_matpower.m}.
+Several examples of using \code{qps\_mips} to solve LP and QP problems can be found in \code{t\_qps\_mips.m}.
 
 \subsection{Primal-Dual Interior Point Algorithm}
 
@@ -965,7 +968,7 @@ This appendix lists all of the files and functions that \mips{} provides. In mos
 \centering
 \begin{threeparttable}
 \caption{\mips{} Files and Functions}
-\label{tab:solvers}
+\label{tab:files}
 \footnotesize
 \begin{tabular}{p{0.25\textwidth}p{0.68\textwidth}}
 \toprule
@@ -973,12 +976,14 @@ name & description \\
 \midrule
 \code{AUTHORS}	& list of authors and contributors	\\
 \code{CHANGES}	& \mips{} change history	\\
+\code{CITATION}	& info on how to cite \mips{}	\\
 \code{CONTRIBUTING.md}	& notes on how to contribute to the \mips{} project	\\
 \code{LICENSE}	& \mips{} license (3-clause BSD license)	\\
 \code{README.md}	& basic introduction to \mips{}	\\
 \code{docs/}	& 	\\
 \code{~~MIPS-manual.pdf}	& \mipsman{}	\\
-\code{~~MIPS-manual.tex}	& LaTeX source for \mips{} User's Manual	\\
+\code{~~src/MIPS-manual/}	&	\\
+\code{~~~~MIPS-manual.tex}	& LaTeX source for \mips{} User's Manual	\\
 \code{lib/}	& 	\\
 \code{~~mips}	& \mipsname{} -- primal/dual interior point solver for NLP	\\
 \code{~~mipsver}	& prints version information for \mips{}	\\
