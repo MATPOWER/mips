@@ -466,7 +466,7 @@ name & description \\
 \begin{tablenotes}
  \scriptsize
  \item [\dag] {All inputs are optional except \code{f\_fcn} and \code{x0}.}
- \item [\ddag] {If \code{gh\_fcn} is provided then \code{hess\_fcn} is also required. Specifically, if there are nonlinear constraints, the Hessian information must provided by the \code{hess\_fcn} function and it need not be computed in \code{f\_fcn}.}
+ \item [\ddag] {If \code{gh\_fcn} is provided then \code{hess\_fcn} is also required. Specifically, if there are nonlinear constraints, the Hessian information must be provided by the \code{hess\_fcn} function and it need not be computed in \code{f\_fcn}.}
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -563,6 +563,7 @@ The use of \code{nargout} in \code{f\_fcn} and \code{gh\_fcn} is recommended so 
 
 
 \subsection{Example 1}
+\label{sec:ex1}
 
 The following code, included as \code{mips\_example1.m} in \mipspath{lib/t}, shows a simple example of using \code{mips} to solve a 2-dimensional unconstrained optimization of Rosenbrock's ``banana'' function\footnote{\url{https://en.wikipedia.org/wiki/Rosenbrock_function}}
 \begin{equation}
@@ -602,6 +603,7 @@ f =
 
 
 \subsection{Example 2}
+\label{sec:ex2}
 
 The second example\footnote{From \url{https://en.wikipedia.org/wiki/Nonlinear\_programming\#3-dimensional\_example}.} solves the following 3-dimensional constrained optimization, printing the details of the solver's progress:
 \begin{equation}
