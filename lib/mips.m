@@ -33,6 +33,9 @@ function [x, f, eflag, output, lambda] = mips(f_fcn, x0, A, l, u, xmin, xmax, gh
 %           nonlinear constraints and their gradients for a given
 %           value of X. Calling syntax for this function is:
 %               [H, G, DH, DG] = GH_FCN(X)
+%           where the columns of DH and DG are the gradients of the
+%           corresponding elements of H and G, i.e. DH and DG are
+%           transposes of the Jacobians of H and G, respectively.
 %       HESS_FCN : handle to function that computes the Hessian of the
 %           Lagrangian for given values of X, lambda and mu, where
 %           lambda and mu are the multipliers on the equality and

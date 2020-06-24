@@ -456,6 +456,7 @@ name & description \\
 \code{xmin}, \code{xmax}	& Optional lower and upper bounds on the $x$ variables, defaults are \code{-Inf} and \code{Inf}, respectively.	\\
 \code{gh\_fcn}	& Handle to function that evaluates the optional nonlinear constraints and their gradients for a given value of $x$. Calling syntax for this function is:	\\
 &~~~~\code{[h, g, dh, dg] = gh\_fcn(x)}	\\
+& where the columns of \code{dh} and \code{dg} are the gradients of the corresponding elements of \code{h} and \code{g}, i.e. \code{dh} and \code{dg} are transposes of the Jacobians of \code{h} and \code{g}, respectively.	\\
 \code{hess\_fcn}	& Handle to function that computes the Hessian\tnote{\ddag} of the Lagrangian for given values of $x$, $\lambda$ and $\mu$, where $\lambda$ and $\mu$ are the multipliers on the equality and inequality constraints, $g$ and $h$, respectively. The calling syntax for this function is:	\\
 &~~~~\code{Lxx = hess\_fcn(x, lam, cost\_mult)},	\\
 &where $\lambda$ = \code{lam.eqnonlin}, $\mu$ = \code{lam.ineqnonlin} and \code{cost\_mult} is a parameter used to scale the objective function	\\
@@ -557,7 +558,7 @@ The user-defined functions for evaluating the objective function, constraints an
 \begin{equation}
 \mathcal{L}(x, \lambda, \mu, \sigma) = \sigma f(x) + \trans{\lambda} g(x) + \trans{\mu} h(x)
 \end{equation}
-for given values of the multipliers $\lambda$ and $\mu$, where $\sigma$ is the \code{cost\_mult} scale factor for the objective function. Unlike \code{fmincon}, \code{mips} passes this scale factor to the Hessian evaluation function in the 3\textsuperscript{rd} argument.
+for given values of the multipliers $\lambda$ and $\mu$, where $\sigma$ is the \code{cost\_mult} scale factor for the objective function. Unlike \code{fmincon}, \code{mips} passes this scale factor to the Hessian evaluation function in the 3\textsuperscript{rd} input argument.
 
 The use of \code{nargout} in \code{f\_fcn} and \code{gh\_fcn} is recommended so that the gradients and Hessian are only computed when required.
 
