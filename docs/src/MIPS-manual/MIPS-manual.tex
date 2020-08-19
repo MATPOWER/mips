@@ -1188,7 +1188,8 @@ The \href{https://matpower.org/docs/MIPS-manual-1.3.2.pdf}{\mips{} 1.3.2 User's 
 
 \subsubsection*{Bugs Fixed}
 \begin{itemize}
-\item Silence inadvertent output from \code{mplinsolve()} when calling without \code{solver} input argument.
+\item Silence inadvertent output from \code{mplinsolve()} when called without \code{solver} input argument.
+\item Fix fatal errors when \code{mplinsolve()} is called with \code{LU} solver and dense \code{A} matrix.
 \end{itemize}
 
 \subsubsection*{Incompatible Changes}

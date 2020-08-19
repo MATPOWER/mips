@@ -13,7 +13,7 @@ if nargin < 1
     quiet = 0;
 end
 
-t_begin(44, quiet);
+t_begin(66, quiet);
 
 isoctave = exist('OCTAVE_VERSION', 'builtin') == 5;
 if isoctave
@@ -410,36 +410,57 @@ t = ''''' : ';
 x = mplinsolve(A, b, '');
 t_is(x, ex, 12, [t 'x']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+x = mplinsolve(full(A), b, '');
+t_is(x, ex, 12, [t 'x (full A)']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
 
 t = '\ : ';
 x = mplinsolve(A, b, '\');
 t_is(x, ex, 12, [t 'x']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+x = mplinsolve(full(A), b, '\');
+t_is(x, ex, 12, [t 'x (full A)']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
 
 t = 'LU : ';
 x = mplinsolve(A, b, 'LU');
 t_is(x, ex, 12, [t 'x']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+x = mplinsolve(full(A), b, 'LU');
+t_is(x, ex, 12, [t 'x (full A)']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
 
 t = 'LU3 : ';
 x = mplinsolve(A, b, 'LU3');
 t_is(x, ex, 12, [t 'x']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+x = mplinsolve(full(A), b, 'LU3');
+t_is(x, ex, 12, [t 'x (full A)']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
 t = 'LU, nout = 3, vec = 1, thresh = 1 : ';
 opt = struct('nout', 3, 'vec', 1, 'thresh', 1);
 x = mplinsolve(A, b, 'LU', opt);
 t_is(x, ex, 12, [t 'x']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+x = mplinsolve(full(A), b, 'LU', opt);
+t_is(x, ex, 12, [t 'x (full A)']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
 
 t = 'LU3a : ';
 x = mplinsolve(A, b, 'LU3a');
 t_is(x, ex, 12, [t 'x']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+x = mplinsolve(full(A), b, 'LU3a');
+t_is(x, ex, 12, [t 'x (full A)']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
 t = 'LU, nout = 3, vec = 1 : ';
 opt = struct('nout', 3, 'vec', 1);
 x = mplinsolve(A, b, 'LU', opt);
 t_is(x, ex, 12, [t 'x']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+x = mplinsolve(full(A), b, 'LU', opt);
+t_is(x, ex, 12, [t 'x (full A)']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
 
 t = 'LU4 : ';
 x = mplinsolve(A, b, 'LU4');
@@ -465,21 +486,33 @@ t = 'LU3m : ';
 x = mplinsolve(A, b, 'LU3m');
 t_is(x, ex, 12, [t 'x']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+x = mplinsolve(full(A), b, 'LU3m');
+t_is(x, ex, 12, [t 'x (full A)']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
 t = 'LU, nout = 3, vec = 0, thresh = 1 : ';
 opt = struct('nout', 3, 'vec', 0, 'thresh', 1);
 x = mplinsolve(A, b, 'LU', opt);
 t_is(x, ex, 12, [t 'x']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+x = mplinsolve(full(A), b, 'LU', opt);
+t_is(x, ex, 12, [t 'x (full A)']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
 
 t = 'LU3am : ';
 x = mplinsolve(A, b, 'LU3am');
 t_is(x, ex, 12, [t 'x']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+x = mplinsolve(full(A), b, 'LU3am');
+t_is(x, ex, 12, [t 'x (full A)']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
 t = 'LU, nout = 3, vec = 0 : ';
 opt = struct('nout', 3, 'vec', 0);
 x = mplinsolve(A, b, 'LU', opt);
 t_is(x, ex, 12, [t 'x']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+x = mplinsolve(full(A), b, 'LU', opt);
+t_is(x, ex, 12, [t 'x (full A)']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
 
 t = 'LU4m : ';
 x = mplinsolve(A, b, 'LU4m');

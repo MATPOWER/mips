@@ -6,8 +6,10 @@ since latest release
 --------------------
 
 #### 8/18/20
-  - Silence inadvertent output from `mplinsolve()` when calling without
+  - Silence inadvertent output from `mplinsolve()` when called without
     `solver` input argument.
+  - Fix fatal errors when `mplinsolve()` is called with `LU` solver and
+    dense `A` matrix.
 
 #### 4/23/20
   - Remove additional `have_fcn()` dependencies in `mips()`,

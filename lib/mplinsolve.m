@@ -70,7 +70,11 @@ switch solver
         x = A \ b;
     case 'LU3'      %% 3 output LU: Gilbert-Peierls alg, perm vec, 1.0 piv thresh
         q = amd(A);     %% permutation vector for AMD reordering
-        [L, U, p] = lu(A(q,q), 1.0, 'vector');
+        if issparse(A)
+            [L, U, p] = lu(A(q,q), 1.0, 'vector');
+        else
+            [L, U, p] = lu(A(q,q), 'vector');
+        end
         x = zeros(size(A, 1), 1);
         x(q) = U \ ( L \ b(q(p)) );
     case 'LU3a'     %% 3 output LU: Gilbert-Peierls alg, permutation vectors
@@ -88,7 +92,11 @@ switch solver
         x(q) = U \ ( L \ (R(:, p) \ b));
     case 'LU3m'     %% 3 output LU: Gilbert-Peierls alg, perm mat, 1.0 piv thresh
         Q = sparse(amd(A), 1:size(A, 1), 1);    %% permutation matrix for AMD reordering
-        [L, U, P] = lu(Q'*A*Q, 1.0);
+        if issparse(A)
+            [L, U, P] = lu(Q'*A*Q, 1.0);
+        else
+            [L, U, P] = lu(Q'*A*Q);
+        end
         x = Q * ( U \ ( L \ (P * Q' * b)) );
     case 'LU3am'    %% 3 output LU: Gilbert-Peierls alg, permutation matrices
         Q = sparse(amd(A), 1:size(A, 1), 1);  %% permutation matrix for AMD reordering
@@ -103,6 +111,9 @@ switch solver
     case 'LU'       %% explicit LU, with options struct
         %% default options
         nout = 4;               %% 4 output args, UMFPACK
+        if ~issparse(A)
+            nout = 3;
+        end
         vec = have_lu_vec();    %% use permulation vectors, if available
         thresh = [];            %% use default pivot threshold
         if isfield(opt, 'lu')
