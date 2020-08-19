@@ -5,6 +5,10 @@ Change history for MIPS
 since latest release
 --------------------
 
+#### 8/18/20
+  - Silence inadvertent output from `mplinsolve()` when calling without
+    `solver` input argument.
+
 #### 4/23/20
   - Remove additional `have_fcn()` dependencies in `mips()`,
     `t_mips_pardiso()` and `t_qps_mips()`.

@@ -59,7 +59,7 @@ function [x, info] = mplinsolve(A, b, solver, opt)
 if nargin < 4
     opt = [];
     if nargin < 3
-        solver = ''
+        solver = '';
     end
 end
 
