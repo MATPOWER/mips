@@ -5,6 +5,9 @@ Change history for MIPS
 since latest release
 --------------------
 
+#### 8/20/20
+  - In User's Manual, add missing `linsolver` option in Table 3-3.
+
 #### 8/18/20
   - Silence inadvertent output from `mplinsolve()` when called without
     `solver` input argument.

@@ -491,13 +491,13 @@ name & description \\
 1 & first order optimality conditions satisfied \\
 0 & maximum number of iterations reached \\
 -1 & numerically failed \\
-\end{tabular} 	\\
+\end{tabular}	\\
 \code{output}	& output struct with fields	\\
 &\begin{tabular}{lp{0.65\textwidth}}
 \code{iterations} & number of iterations performed \\
 \code{hist} & struct array with trajectories of the following: \code{feascond}, \code{gradcond}, \code{compcond}, \code{costcond}, \code{gamma}, \code{stepsize}, \code{obj}, \code{alphap}, \code{alphad} \\
 \code{message} & exit message \\
-\end{tabular} 	\\
+\end{tabular}	\\
 \code{lambda}	& struct containing the Langrange and Kuhn-Tucker multipliers on the constraints, with fields:	\\
 &\begin{tabular}{lp{0.65\textwidth}}
 \code{eqnonlin} & nonlinear equality constraints	\\
@@ -506,7 +506,7 @@ name & description \\
 \code{mu\_u} & upper (right-hand) limit on linear constraints	\\
 \code{lower} & lower bound on optimization variables	\\
 \code{upper} & upper bound on optimization variables	\\
-\end{tabular} 	\\
+\end{tabular}	\\
 \bottomrule
 \end{tabular}
 \end{threeparttable}
@@ -516,7 +516,7 @@ name & description \\
 %\renewcommand{\arraystretch}{1.2}
 \centering
 \begin{threeparttable}
-\caption{Options for \code{mips}\tnote{\dag}}
+\caption{Options for \code{mips}}
 \label{tab:mips_options}
 \footnotesize
 \begin{tabular}{lcp{0.65\textwidth}}
@@ -529,7 +529,14 @@ name & default & description \\
 1 & print a little progress info \\
 2 & print a lot of progress info \\
 3 & print all progress info \\
-\end{tabular} 	\\
+\end{tabular}	\\
+\code{opt.linsolver} & \codeq{} & linear system solver for solving update steps \eqref{eq:ipm_reduced_system}, i.e. \code{solver} input to \code{mplinsolve} \\
+&& \begin{tabular}{r @{ -- } p{0.5\textwidth}}
+\codeq{} & default, same as \codeq{\symbol{92}} \\
+\codeq{\symbol{92}} & use built-in \code{\symbol{92}} operator \\
+\codeq{LU} & use \code{lu} to explicitly factor matrix, followed by back-substitution \\
+\codeq{PARDISO} & use optional third-party \pardiso{} solver\tnote{\dag} \\
+\end{tabular}	\\
 \code{opt.feastol} & $10^{-6}$ & termination tolerance for feasibility condition \\
 \code{opt.gradtol} & $10^{-6}$ & termination tolerance for gradient condition \\
 \code{opt.comptol} & $10^{-6}$ & termination tolerance for complementarity condition \\
@@ -548,6 +555,10 @@ name & default & description \\
 \code{opt.max\_stepsize} & $10^{10}$ & algorithm returns ``Numerically Failed'' if the 2-norm of the Newton step $\left[\begin{array}{c}\Delta X \\ \Delta \lambda \\ \end{array}\right]$ from \eqref{eq:ipm_reduced_system} exceeds this value \\
 \bottomrule
 \end{tabular}
+\begin{tablenotes}
+ \scriptsize
+ \item [\dag] {Requires the installation of an optional package. See Appendix~\ref{app:pardiso} for details.}
+\end{tablenotes}
 \end{threeparttable}
 \end{table}
 
@@ -562,7 +573,7 @@ for given values of the multipliers $\lambda$ and $\mu$, where $\sigma$ is the \
 
 The use of \code{nargout} in \code{f\_fcn} and \code{gh\_fcn} is recommended so that the gradients and Hessian are only computed when required.
 
-
+\clearpage
 \subsection{Example 1}
 \label{sec:ex1}
 
@@ -997,15 +1008,15 @@ name & description \\
 \code{~~~~mips\_example2}	& implements example 2 from \mips{} User's Manual	\\
 \code{~~~~test\_mips}	& runs full \mips{} test suite	\\
 \code{~~~~t\_mips}	& runs tests for \mips{} NLP solver	\\
-\code{~~~~t\_mips\_pardiso}	& runs tests for \mips{} NLP solver, using PARDISO as linear solver	\\
+\code{~~~~t\_mips\_pardiso}	& runs tests for \mips{} NLP solver, using PARDISO as linear solver\tnote{\dag}	\\
 \code{~~~~t\_mplinsolve}	& tests for \code{mplinsolve}	\\
 \code{~~~~t\_qps\_mips}	& runs tests for \code{qps\_mips}	\\
 \bottomrule
 \end{tabular}
-% \begin{tablenotes}
-%  \scriptsize
-%  \item [\dag] {Requires the installation of an optional package. See Appendix~\ref{app:optional_packages} for details on the corresponding package.}
-% \end{tablenotes}
+\begin{tablenotes}
+ \scriptsize
+ \item [\dag] {Requires the installation of an optional package. See Appendix~\ref{app:pardiso} for details.}
+\end{tablenotes}
 \end{threeparttable}
 \end{table}
 
