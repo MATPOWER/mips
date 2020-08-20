@@ -7,6 +7,9 @@ since latest release
 
 #### 8/20/20
   - In User's Manual, add missing `linsolver` option in Table 3-3.
+  - In User's Manual, add Sections 4 Other Functions, 4.1 Linear System
+    Solvers - mplinsolve, and move Section 3.3 Quadratic Programming
+    Solver to 4.2.
 
 #### 8/18/20
   - Silence inadvertent output from `mplinsolve()` when called without

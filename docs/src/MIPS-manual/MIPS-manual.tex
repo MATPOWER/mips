@@ -700,33 +700,6 @@ lambda.ineqnonlin =
 \end{Code}
 This example can be found in \code{mips\_example2.m}. More example problems for \code{mips} can be found in \code{t\_mips.m}, both in \mipspath{lib/t}.
 
-\subsection{Quadratic Programming Solver}
-
-A convenience wrapper function called \code{qps\_mips} is provided to make it trivial to set up and solve linear programming (LP) and quadratic programming (QP) problems of the following form:
-\begin{equation}
-\min_x \frac{1}{2} \trans{x} H x + \trans{c} x
-\end{equation}
-subject to
-\begin{eqnarray}
-& l \le A x \le u  & \\
-& x_\mathrm{min} \le x \le x_\mathrm{max}. &
-\end{eqnarray}
-Instead of a function handle, the objective function is specified in terms of the paramters $H$ and $c$ of quadratic cost coefficients. Internally, \code{qps\_mips} passes \code{mips} the handle of a function that uses these paramters to evaluate the objective function, gradients and Hessian.
-
-The calling syntax for \code{qps\_mips} is similar to that used by \code{quadprog} from the \matlab{} \ot{}.
-\begin{Code}
-[x, f, exitflag, output, lambda] = qps_mips(H, c, A, l, u, xmin, xmax, x0, opt);
-\end{Code}
-Alternatively, the input arguments can be packaged as fields in a \code{problem} struct and passed in as a single argument, where all fields except \code{H}, \code{c}, \code{A} and \code{l} are optional.
-\begin{Code}
-[x, f, exitflag, output, lambda] = qps_mips(problem);
-\end{Code}
-Aside from \code{H} and \code{c}, all input and output arguments correspond exactly to the same arguments for \code{mips} as described in Tables~\ref{tab:mips_input} and \ref{tab:mips_output}.
-
-As with \code{mips} and \code{fmincon}, the primary difference between the calling syntax for \code{qps\_mips} and \code{quadprog} is that the linear constraints are specified in terms of a single doubly-bounded linear function ($l \le A x \le u$) as opposed to separate equality constrained ($A_{eq} x = b_{eq}$) and upper bounded ($A x \le b$) functions.
-
-Several examples of using \code{qps\_mips} to solve LP and QP problems can be found in \code{t\_qps\_mips.m}.
-
 \subsection{Primal-Dual Interior Point Algorithm}
 
 This section provides some details on the primal-dual interior point algorithm used by \mips{} and described in~\cite{wang2007a, wang2007}.
@@ -966,6 +939,60 @@ In this method, during the Newton-like iterations, the perturbation parameter $\
 \gamma \gets \sigma \frac{\trans{Z} \mu}{n_i} \label{eq:gamma}
 \end{equation}
 where $\sigma$ is a scalar constant between 0 and 1. In \mips{}, $\sigma$ is set to 0.1.
+
+%%------------------------------------------
+\clearpage
+\section{Other Functions}
+
+\subsection{Linear System Solver - {\tt mplinsolve}}
+\label{sec:mplinsolve}
+
+The \code{mplinsolve} function provides a common interface to several different methods for solving a system of linear equations of the form $Ax = b$.
+\begin{Code}
+x = mplinsolve(A, b);
+x = mplinsolve(A, b, solver);
+x = mplinsolve(A, b, solver, opt);
+\end{Code}
+
+The \code{solver} argument can be one of the following:
+\begin{itemize}
+\setlength{\parskip}{-6pt}%
+\item \codeq{} -- default, same as \codeq{\symbol{92}}
+\item \codeq{\symbol{92}} -- use built-in \code{\symbol{92}} operator, i.e. \code{x = A \symbol{92} b}
+\item \codeq{LU} -- use built-in \code{lu} function to explicitly factor $A$, then solve for $x$ via back-substitution
+\item \codeq{PARDISO} -- use optional third-party \pardiso{} solver\footnote{Requires the installation of an optional package. See Appendix~\ref{app:pardiso} for details.}
+\end{itemize}
+See \code{help mplinsolve} for more details.
+
+Note that \mips{} uses \code{mplinsolve} to solve the Newton update step in \eqref{eq:ipm_reduced_system}.
+
+\subsection{Quadratic Programming Solver - {\tt qps\_mips}}
+\label{sec:qps_mips}
+
+A convenience wrapper function called \code{qps\_mips} is provided to make it trivial to set up and solve linear programming (LP) and quadratic programming (QP) problems of the following form:
+\begin{equation}
+\min_x \frac{1}{2} \trans{x} H x + \trans{c} x
+\end{equation}
+subject to
+\begin{eqnarray}
+& l \le A x \le u  & \\
+& x_\mathrm{min} \le x \le x_\mathrm{max}. &
+\end{eqnarray}
+Instead of a function handle, the objective function is specified in terms of the paramters $H$ and $c$ of quadratic cost coefficients. Internally, \code{qps\_mips} passes \code{mips} the handle of a function that uses these paramters to evaluate the objective function, gradients and Hessian.
+
+The calling syntax for \code{qps\_mips} is similar to that used by \code{quadprog} from the \matlab{} \ot{}.
+\begin{Code}
+[x, f, exitflag, output, lambda] = qps_mips(H, c, A, l, u, xmin, xmax, x0, opt);
+\end{Code}
+Alternatively, the input arguments can be packaged as fields in a \code{problem} struct and passed in as a single argument, where all fields except \code{H}, \code{c}, \code{A} and \code{l} are optional.
+\begin{Code}
+[x, f, exitflag, output, lambda] = qps_mips(problem);
+\end{Code}
+Aside from \code{H} and \code{c}, all input and output arguments correspond exactly to the same arguments for \code{mips} as described in Tables~\ref{tab:mips_input} and \ref{tab:mips_output}.
+
+As with \code{mips} and \code{fmincon}, the primary difference between the calling syntax for \code{qps\_mips} and \code{quadprog} is that the linear constraints are specified in terms of a single doubly-bounded linear function ($l \le A x \le u$) as opposed to separate equality constrained ($A_{eq} x = b_{eq}$) and upper bounded ($A x \le b$) functions.
+
+Several examples of using \code{qps\_mips} to solve LP and QP problems can be found in \code{t\_qps\_mips.m}.
 
 
 \begin{appendices}
