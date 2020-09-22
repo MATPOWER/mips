@@ -16,9 +16,9 @@ function [TorF, vstr, rdate] = have_feature_pardiso_object()
 %   See https://github.com/MATPOWER/mips for more info.
 
 TorF = exist('pardiso', 'file') == 2;
-vstr = '';
 rdate = '';
 if TorF
+    vstr = '6.x+';
     try
         id = 1;
         A = sparse([1 2; 3 4]);
@@ -34,4 +34,6 @@ if TorF
     catch
         TorF = 0;
     end
+else
+    vstr = '';
 end

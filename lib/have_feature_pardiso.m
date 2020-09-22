@@ -16,6 +16,14 @@ function [TorF, vstr, rdate] = have_feature_pardiso()
 %   Covered by the 3-clause BSD License (see LICENSE file for details).
 %   See https://github.com/MATPOWER/mips for more info.
 
-TorF = have_feature('pardiso_object') || have_feature('pardiso_legacy');
-vstr = '';
+if have_feature('pardiso_object')
+    TorF = 1;
+    vstr = have_feature('pardiso_object', 'vstr');
+elseif have_feature('pardiso_legacy')
+    TorF = 1;
+    vstr = have_feature('pardiso_legacy', 'vstr');
+else
+    TorF = 0;
+    vstr = '';
+end
 rdate = '';

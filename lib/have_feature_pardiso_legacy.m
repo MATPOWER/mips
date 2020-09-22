@@ -20,9 +20,9 @@ TorF = exist('pardisoinit', 'file') == 3 && ...
         exist('pardisofactor', 'file') == 3 && ...
         exist('pardisosolve', 'file') == 3 && ...
         exist('pardisofree', 'file') == 3;
-vstr = '';
 rdate = '';
 if TorF
+    vstr = '6.x+';
     try
         A = sparse([1 2; 3 4]);
         b = [1;1];
@@ -43,4 +43,6 @@ if TorF
     catch
         TorF = 0;
     end
+else
+    vstr = '';
 end
