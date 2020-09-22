@@ -114,8 +114,8 @@ switch solver
         if ~issparse(A)
             nout = 3;
         end
-        vec = have_lu_vec();    %% use permulation vectors, if available
-        thresh = [];            %% use default pivot threshold
+        vec = have_feature('lu_vec');   %% use permulation vectors, if available
+        thresh = [];                    %% use default pivot threshold
         if isfield(opt, 'lu')
             opt_lu = opt.lu;
             if isfield(opt_lu, 'nout')
@@ -189,7 +189,7 @@ switch solver
         end
 
         %% begin setup and solve
-        v6 = have_pardiso_object();
+        v6 = have_feature('pardiso_object');
         if v6               %% PARDISO v6+
             id = 1;
             p = pardiso(id, mtype, pardiso_solver);
@@ -232,35 +232,6 @@ switch solver
         warning('mplinsolve: ''%s'' is not a valid value for SOLVER, using default.', solver);
         x = A \ b;
 end
-
-
-function TorF = have_lu_vec()
-% Checks whether or not LU supports lu(..., 'vector') syntax
-persistent lu_vec;      %% cache the result for performance reasons
-if isempty(lu_vec)
-    lu_vec = 1;         %% assume it does, unless this is MATLAB ver < 7.3
-    v = ver('matlab');
-    if length(v) > 1
-        warning('The built-in VER command is behaving strangely, probably as a result of installing a 3rd party toolbox in a directory named ''matlab'' on your path. Check each element of the output of ver(''matlab'') to find the offending toolbox, then move the toolbox to a more appropriately named directory.');
-        v = v(1);
-    end
-    if ~isempty(v) && isfield(v, 'Version') && ~isempty(v.Version)
-        vstr = v.Version;
-        if ~isempty(vstr) && vstr2num_(vstr) < 7.003
-            lu_vec = 0;
-        end
-    end
-end
-TorF = lu_vec;
-
-
-function TorF = have_pardiso_object()
-% Checks for availability of PARDISO 6
-persistent pardiso_object;    %% cache the result for performance reasons
-if isempty(pardiso_object)
-    pardiso_object = exist('pardiso', 'file') == 2;
-end
-TorF = pardiso_object;
 
 
 function num = vstr2num_(vstr)

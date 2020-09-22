@@ -9,6 +9,8 @@ since latest release
   - Add feature detection functions for LU and PARDISO, defining tags
     `'lu_vec'`, `'pardiso_legacy'`, `'pardiso_object'` and `'pardiso'`
     for `have_feature()`. Requires MP-Test 7.1 or later.
+  - Remove custom LU and PARDISO detection code from `mplinsolve` and
+    test functions, and switch to using `have_feature()`.
 
 #### 8/20/20
   - In User's Manual, add missing `linsolver` option in Table 3-3.
