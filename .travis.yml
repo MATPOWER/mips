@@ -28,6 +28,7 @@ env:
 
 script:
 - octave-cli --no-gui --eval ver
+- octave-cli --no-gui -p $MPTEST_PATH --eval mptestver
 - octave-cli --no-gui -p $MPTEST_PATH --eval "test_mptest(0,1)"
 - octave-cli --no-gui -p $MIPS_PATH --eval mipsver
 - octave-cli --no-gui -p $MIPS_PATH --eval "test_mips(0,1)"
