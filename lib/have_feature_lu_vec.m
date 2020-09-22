@@ -1,15 +1,18 @@
 function [TorF, vstr, rdate] = have_feature_lu_vec()
 %HAVE_FEATURE_LU_VEC  Detect availability/version info for LU vector support
 %
-%   Used by HAVE_FEATURE.
+%   Feature detection function implementing 'lu_vec' tag for HAVE_FEATURE
+%   to detect support for LU(..., 'vector') syntax.
+%
+%   See also HAVE_FEATURE, LU.
 
-%   MP-Opt-Model
+%   MIPS
 %   Copyright (c) 2004-2020, Power Systems Engineering Research Center (PSERC)
 %   by Ray Zimmerman, PSERC Cornell
 %
-%   This file is part of MP-Opt-Model.
+%   This file is part of MIPS.
 %   Covered by the 3-clause BSD License (see LICENSE file for details).
-%   See https://github.com/MATPOWER/mp-opt-model for more info.
+%   See https://github.com/MATPOWER/mips for more info.
 
 vstr = '';
 rdate = '';

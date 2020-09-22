@@ -5,6 +5,11 @@ Change history for MIPS
 since latest release
 --------------------
 
+#### 9/23/20
+  - Add feature detection functions for LU and PARDISO, defining tags
+    `'lu_vec'`, `'pardiso_legacy'`, `'pardiso_object'` and `'pardiso'`
+    for `have_feature()`. Requires MP-Test 7.1 or later.
+
 #### 8/20/20
   - In User's Manual, add missing `linsolver` option in Table 3-3.
   - In User's Manual, add Sections 4 Other Functions, 4.1 Linear System

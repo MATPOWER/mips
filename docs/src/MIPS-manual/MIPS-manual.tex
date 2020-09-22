@@ -140,11 +140,18 @@
 \newcommand{\mptest}[0]{{MP-Test}}
 \newcommand{\mptesturl}[0]{https://github.com/MATPOWER/mptest}
 \newcommand{\mptestlink}[0]{\href{\mptesturl}{\mptest{}}}
+\newcommand{\mptestver}[0]{7.1}
 \newcommand{\mips}[0]{{MIPS}}
 \newcommand{\mipsurl}[0]{https://github.com/MATPOWER/mips}
 \newcommand{\mipslink}[0]{\href{\mipsurl}{\mips{}}}
 \newcommand{\mipsname}[0]{{{\bf M}{\sc atpower} \textbf{I}nterior \textbf{P}oint \textbf{S}olver}}
 \newcommand{\mipsver}[0]{1.3.1+}
+\newcommand{\mpom}[0]{\mbox{MP-Opt-Model}}
+\newcommand{\mpomurl}[0]{https://github.com/MATPOWER/mp-opt-model}
+\newcommand{\mpomlink}[0]{\href{\mpomurl}{\mpom{}}}
+\newcommand{\mpomname}[0]{\mpom{}}
+% \newcommand{\mpomname}[0]{{{\bf M}{\sc at}{\bf P}{\sc ower} \textbf{Opt}imization \textbf{Model}}}
+\newcommand{\mpomver}[0]{2.2-dev}
 \newcommand{\most}[0]{{MOST}}
 \newcommand{\mostname}[0]{{{\bf M}{\sc atpower} \textbf{O}ptimal \textbf{S}cheduling \textbf{T}ool}}
 \newcommand{\mosturl}[0]{https://github.com/MATPOWER/most}
@@ -345,7 +352,7 @@ Following the release of \mips{} 1.2.2 (with \matpower{} 6.0), the \mips{} proje
 
 \bigskip
 
-The \mips{} GitHub project hosts the public Git code repository as well as a public issue tracker for handling bug reports, patches, and other issues and contributions. There are separate GitHub hosted repositories and issue trackers for \matpower{}, \most{}, \mips{} and the testing framework used by all of them, \mptest{}, all available from \url{https://github.com/MATPOWER/}.
+The \mips{} GitHub project hosts the public Git code repository as well as a public issue tracker for handling bug reports, patches, and other issues and contributions. There are separate GitHub hosted repositories and issue trackers for \matpower{}, \most{}, \mpom{} and the testing framework used by all of them, \mptest{}, all available from \url{https://github.com/MATPOWER/}.
 
 
 %%------------------------------------------
@@ -358,7 +365,7 @@ To use \mips{} \mipsver{} you will need:
 \begin{itemize}
 \item \matlab{}\textsuperscript{\tiny \textregistered} version 7 (R14) or later\footnote{\matlab{} is available from The MathWorks, Inc. (\url{https://www.mathworks.com/}). \matlab{} is a registered trademark of The MathWorks, Inc.}, or
 \item GNU Octave version 3.4 or later\footnote{GNU Octave \cite{octave} is free software, available online at \url{https://www.gnu.org/software/octave/}. \mips{} \mipsver{} may work on earlier versions of Octave, but it has not been tested on versions prior to 3.4.}
-\item \mptestlink{}, for running the \mips{} test suite.\footnote{\mptest{} is available at \url{\mptesturl}.}
+\item \mptestlink{} version 7.1 or later.\footnote{\mptest{} is available at \url{\mptesturl}.}
 \end{itemize}
 
 For the hardware requirements, please refer to the system requirements for the version of \matlab{}\footnote{\url{https://www.mathworks.com/support/sysreq/previous_releases.html}} or Octave that you are using.
@@ -994,6 +1001,29 @@ As with \code{mips} and \code{fmincon}, the primary difference between the calli
 
 Several examples of using \code{qps\_mips} to solve LP and QP problems can be found in \code{t\_qps\_mips.m}.
 
+\subsection{Private Feature Detection Functions}
+
+The following are private functions that implement detection of specific optional functionality for \code{have\_feature}. The function \code{have\_feature} is included in \mptestlink{} and described in the \mptest{} README file.
+
+\subsubsection{\tt have\_feature\_lu\_vec}
+\label{sec:have_feature_lu_vec}
+
+Feature detection function implementing the \codeq{lu\_vec} tag for \code{have\_feature} to detect support for the \code{lu(..., \textquotesingle{}vector\textquotesingle{})} syntax.
+
+\subsubsection{\tt have\_feature\_pardiso\_legacy}
+\label{sec:have_feature_pardiso_legacy}
+
+Feature detection function implementing the \codeq{pardiso\_legacy} tag for \code{have\_feature} to detect support for the legacy (v5.x) \pardiso{} interface, with individual MEX files for factor, solve, etc.
+
+\subsubsection{\tt have\_feature\_pardiso\_object}
+\label{sec:have_feature_pardiso_object}
+
+Feature detection function implementing the \codeq{pardiso\_object} tag for \code{have\_feature} to detect support for the object-oriented (v6.x and later) \pardiso{} interface.
+
+\subsubsection{\tt have\_feature\_pardiso}
+\label{sec:have_feature_pardiso}
+
+Feature detection function implementing the \codeq{pardiso} tag for \code{have\_feature} to detect availability/version of \pardiso{}, Parallel Sparse Direct and Multi-Recursive Iterative Linear Solvers, available from \url{https://pardiso-project.org}. See also Appendix~\ref{app:pardiso}.
 
 \begin{appendices}
 
@@ -1011,7 +1041,7 @@ This appendix lists all of the files and functions that \mips{} provides. In mos
 \caption{\mips{} Files and Functions}
 \label{tab:files}
 \footnotesize
-\begin{tabular}{p{0.25\textwidth}p{0.68\textwidth}}
+\begin{tabular}{p{0.34\textwidth}p{0.59\textwidth}}
 \toprule
 name & description \\
 \midrule
@@ -1026,6 +1056,10 @@ name & description \\
 \code{~~src/MIPS-manual/}	&	\\
 \code{~~~~MIPS-manual.tex}	& LaTeX source for \mips{} User's Manual	\\
 \code{lib/}	& 	\\
+\code{~~have\_feature\_lu\_vec}\tnote{*}	& support for \code{lu(..., \textquotesingle{}vector\textquotesingle{})} syntax	\\
+\code{~~have\_feature\_pardiso\_legacy}\tnote{*}	& \pardiso{} v5, individual MEX files for factor, solve, etc.	\\
+\code{~~have\_feature\_pardiso\_object}\tnote{*}	& \pardiso{} v6 and later, object interface	\\
+\code{~~have\_feature\_pardiso}\tnote{*}	& \pardiso{}, {\bf Par}allel Sparse {\bf D}irect \& {\bf I}terative Linear {\bf So}lver, \url{https://pardiso-project.org}	\\
 \code{~~mips}	& \mipsname{} -- primal/dual interior point solver for NLP	\\
 \code{~~mipsver}	& prints version information for \mips{}	\\
 \code{~~mplinsolve}	& common linear system solver interface, used by \mips{}	\\
@@ -1042,6 +1076,7 @@ name & description \\
 \end{tabular}
 \begin{tablenotes}
  \scriptsize
+ \item [*] {These functions implement new tags and the detection of the corresponding features for \code{have\_feature} which is part of \mptestlink{}.}
  \item [\dag] {Requires the installation of an optional package. See Appendix~\ref{app:pardiso} for details.}
 \end{tablenotes}
 \end{threeparttable}
@@ -1221,7 +1256,16 @@ The \href{https://matpower.org/docs/MIPS-manual-1.3.2.pdf}{\mips{} 1.3.2 User's 
 
 \subsubsection*{Changes}
 \begin{itemize}
-\item Remove additional \code{have\_fcn()} dependencies in \code{mips()}, \code{t\_mips\_pardiso()} and \code{t\_qps\_mips()}.
+\item Requires \mptest{} 7.1 or later with support for \code{have\_feature()}.
+\item Remove \code{have\_fcn()} dependencies in \code{mips()}, \code{t\_mips\_pardiso()} and \code{t\_qps\_mips()}.
+\item Add feature detection functions for \code{lu()} and \pardiso{}, defining tags \codeq{lu\_vec}, \codeq{pardiso\_legacy}, \codeq{pardiso\_object} and \codeq{pardiso} for \code{have\_feature()}.
+\item New functions:
+    \begin{itemize}
+    \item \code{have\_feature\_lu\_vec} detects support for the \code{lu(..., \textquotesingle{}vector\textquotesingle{})} syntax.
+    \item \code{have\_feature\_pardiso\_legacy} detects support for the legacy (v5.x) \pardiso{} interface, with individual MEX files for factor, solve, etc.
+    \item \code{have\_feature\_pardiso\_object} detects support for the object-oriented (v6.x and later) \pardiso{} interface.
+    \item \code{have\_feature\_pardiso} detects availability/version of \pardiso{}.
+    \end{itemize}
 \end{itemize}
 
 \subsubsection*{Bugs Fixed}
