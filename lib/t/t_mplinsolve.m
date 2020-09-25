@@ -22,6 +22,12 @@ if isoctave
     warning('off', lu_warning_id);
 end
 
+%% non-sparse A matrix crashes some MATLAB lu() calls on certain
+%% combinations of MATLAB and macOS versions
+mlv = have_feature('matlab', 'vnum');
+skipcrash = ~isempty(mlv) && mlv < 8.003 && mlv > 7.013 && ...
+    strcmp(computer, 'MACI64');
+
 ijs = [
     1 1 1205.63;
     4 1 -1205.63;
@@ -426,41 +432,61 @@ t = 'LU : ';
 x = mplinsolve(A, b, 'LU');
 t_is(x, ex, 12, [t 'x']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
-x = mplinsolve(full(A), b, 'LU');
-t_is(x, ex, 12, [t 'x (full A)']);
-t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
+if skipcrash
+    t_skip(2, [t 'potential MATLAB crash with non-sparse A']);
+else
+    x = mplinsolve(full(A), b, 'LU');
+    t_is(x, ex, 12, [t 'x (full A)']);
+    t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
+end
 
 t = 'LU3 : ';
 x = mplinsolve(A, b, 'LU3');
 t_is(x, ex, 12, [t 'x']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
-x = mplinsolve(full(A), b, 'LU3');
-t_is(x, ex, 12, [t 'x (full A)']);
-t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
+if skipcrash
+    t_skip(2, [t 'potential MATLAB crash with non-sparse A']);
+else
+    x = mplinsolve(full(A), b, 'LU3');
+    t_is(x, ex, 12, [t 'x (full A)']);
+    t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
+end
 t = 'LU, nout = 3, vec = 1, thresh = 1 : ';
 opt = struct('nout', 3, 'vec', 1, 'thresh', 1);
 x = mplinsolve(A, b, 'LU', opt);
 t_is(x, ex, 12, [t 'x']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
-x = mplinsolve(full(A), b, 'LU', opt);
-t_is(x, ex, 12, [t 'x (full A)']);
-t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
+if skipcrash
+    t_skip(2, [t 'potential MATLAB crash with non-sparse A']);
+else
+    x = mplinsolve(full(A), b, 'LU', opt);
+    t_is(x, ex, 12, [t 'x (full A)']);
+    t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
+end
 
 t = 'LU3a : ';
 x = mplinsolve(A, b, 'LU3a');
 t_is(x, ex, 12, [t 'x']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
-x = mplinsolve(full(A), b, 'LU3a');
-t_is(x, ex, 12, [t 'x (full A)']);
-t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
+if skipcrash
+    t_skip(2, [t 'potential MATLAB crash with non-sparse A']);
+else
+    x = mplinsolve(full(A), b, 'LU3a');
+    t_is(x, ex, 12, [t 'x (full A)']);
+    t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
+end
 t = 'LU, nout = 3, vec = 1 : ';
 opt = struct('nout', 3, 'vec', 1);
 x = mplinsolve(A, b, 'LU', opt);
 t_is(x, ex, 12, [t 'x']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
-x = mplinsolve(full(A), b, 'LU', opt);
-t_is(x, ex, 12, [t 'x (full A)']);
-t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
+if skipcrash
+    t_skip(2, [t 'potential MATLAB crash with non-sparse A']);
+else
+    x = mplinsolve(full(A), b, 'LU', opt);
+    t_is(x, ex, 12, [t 'x (full A)']);
+    t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
+end
 
 t = 'LU4 : ';
 x = mplinsolve(A, b, 'LU4');
@@ -486,33 +512,49 @@ t = 'LU3m : ';
 x = mplinsolve(A, b, 'LU3m');
 t_is(x, ex, 12, [t 'x']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
-x = mplinsolve(full(A), b, 'LU3m');
-t_is(x, ex, 12, [t 'x (full A)']);
-t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
+if skipcrash
+    t_skip(2, [t 'potential MATLAB crash with non-sparse A']);
+else
+    x = mplinsolve(full(A), b, 'LU3m');
+    t_is(x, ex, 12, [t 'x (full A)']);
+    t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
+end
 t = 'LU, nout = 3, vec = 0, thresh = 1 : ';
 opt = struct('nout', 3, 'vec', 0, 'thresh', 1);
 x = mplinsolve(A, b, 'LU', opt);
 t_is(x, ex, 12, [t 'x']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
-x = mplinsolve(full(A), b, 'LU', opt);
-t_is(x, ex, 12, [t 'x (full A)']);
-t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
+if skipcrash
+    t_skip(2, [t 'potential MATLAB crash with non-sparse A']);
+else
+    x = mplinsolve(full(A), b, 'LU', opt);
+    t_is(x, ex, 12, [t 'x (full A)']);
+    t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
+end
 
 t = 'LU3am : ';
 x = mplinsolve(A, b, 'LU3am');
 t_is(x, ex, 12, [t 'x']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
-x = mplinsolve(full(A), b, 'LU3am');
-t_is(x, ex, 12, [t 'x (full A)']);
-t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
+if skipcrash
+    t_skip(2, [t 'potential MATLAB crash with non-sparse A']);
+else
+    x = mplinsolve(full(A), b, 'LU3am');
+    t_is(x, ex, 12, [t 'x (full A)']);
+    t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
+end
 t = 'LU, nout = 3, vec = 0 : ';
 opt = struct('nout', 3, 'vec', 0);
 x = mplinsolve(A, b, 'LU', opt);
 t_is(x, ex, 12, [t 'x']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
-x = mplinsolve(full(A), b, 'LU', opt);
-t_is(x, ex, 12, [t 'x (full A)']);
-t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
+if skipcrash
+    t_skip(2, [t 'potential MATLAB crash with non-sparse A']);
+else
+    x = mplinsolve(full(A), b, 'LU', opt);
+    t_is(x, ex, 12, [t 'x (full A)']);
+    t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
+end
 
 t = 'LU4m : ';
 x = mplinsolve(A, b, 'LU4m');
