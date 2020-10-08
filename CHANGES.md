@@ -2,8 +2,11 @@ Change history for MIPS
 =======================
 
 
-since latest release
---------------------
+Version 1.4 - *Oct 8, 2020*
+---------------------------
+
+#### 10/8/20
+  - Release 1.4.
 
 #### 9/23/20
   - Add feature detection functions for LU and PARDISO, defining tags
