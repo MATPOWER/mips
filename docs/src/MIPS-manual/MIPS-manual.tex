@@ -1002,28 +1002,36 @@ As with \code{mips} and \code{fmincon}, the primary difference between the calli
 Several examples of using \code{qps\_mips} to solve LP and QP problems can be found in \code{t\_qps\_mips.m}.
 
 \subsection{Private Feature Detection Functions}
+\label{sec:featuredetection}
 
-The following are private functions that implement detection of specific optional functionality for \code{have\_feature}. The function \code{have\_feature} is included in \mptestlink{} and described in the \mptest{} README file.
+The following are private functions that implement detection of specific optional functionality. They are not intended to be called directly, but rather are used to extend the capabilities of \code{have\_feature}, a function included in \mptestlink{} and described in the \mptest{} \href{\mptesturl/blob/master/README.md}{\code{README}} file.
 
 \subsubsection{\tt have\_feature\_lu\_vec}
 \label{sec:have_feature_lu_vec}
 
-Feature detection function implementing the \codeq{lu\_vec} tag for \code{have\_feature} to detect support for the \code{lu(..., \textquotesingle{}vector\textquotesingle{})} syntax.
+This function implements the \codeq{lu\_vec} tag for \code{have\_feature} to detect support for the \code{lu(..., \textquotesingle{}vector\textquotesingle{})} syntax.
 
 \subsubsection{\tt have\_feature\_pardiso\_legacy}
 \label{sec:have_feature_pardiso_legacy}
 
-Feature detection function implementing the \codeq{pardiso\_legacy} tag for \code{have\_feature} to detect support for the legacy (v5.x) \pardiso{} interface, with individual MEX files for factor, solve, etc.
+This function implements the \codeq{pardiso\_legacy} tag for \code{have\_feature} to detect support for the legacy (v5.x) \pardiso{} interface, with individual MEX files for factor, solve, etc.
 
 \subsubsection{\tt have\_feature\_pardiso\_object}
 \label{sec:have_feature_pardiso_object}
 
-Feature detection function implementing the \codeq{pardiso\_object} tag for \code{have\_feature} to detect support for the object-oriented (v6.x and later) \pardiso{} interface.
+This function implements the \codeq{pardiso\_object} tag for \code{have\_feature} to detect support for the object-oriented (v6.x and later) \pardiso{} interface.
 
 \subsubsection{\tt have\_feature\_pardiso}
 \label{sec:have_feature_pardiso}
 
-Feature detection function implementing the \codeq{pardiso} tag for \code{have\_feature} to detect availability/version of \pardiso{}, Parallel Sparse Direct and Multi-Recursive Iterative Linear Solvers, available from \url{https://pardiso-project.org}. See also Appendix~\ref{app:pardiso}.
+This function implements the \codeq{pardiso} tag for \code{have\_feature} to detect availability/version of \pardiso{}, Parallel Sparse Direct and Multi-Recursive Iterative Linear Solvers, available from \url{https://pardiso-project.org}. See also Appendix~\ref{app:pardiso}.
+
+
+%%------------------------------------------
+\clearpage
+\section{Acknowledgments}
+The authors would like to acknowledge the support of the research grants and contracts that have contributed directly and indirectly to the development of \mips{}. This includes funding from the \PSERC{}, the U.S. Department of Energy,\footnote{Supported in part by the \CERTS{} and the Office of Electricity Delivery and Energy Reliability, Transmission Reliability Program of the U.S. Department of Energy under the National Energy Technology Laboratory Cooperative Agreement No.~DE-FC26-09NT43321.} and the National Science Foundation.\footnote{This material is based upon work supported in part by the National Science Foundation under Grant Nos. 0532744, 1642341 and 1931421. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.}
+
 
 \begin{appendices}
 
