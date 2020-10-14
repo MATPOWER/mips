@@ -33,9 +33,9 @@ jobs:
     - name: Install MP-Test, Set MPTEST_PATH
       run: |
         git clone --depth=50 https://github.com/MATPOWER/mptest.git $HOME/mptest
-        echo "::set-env name=MPTEST_PATH::$HOME/mptest/lib:$HOME/mptest/lib/t"
+        echo "MPTEST_PATH=$HOME/mptest/lib:$HOME/mptest/lib/t" >> $GITHUB_ENV
     - name: Set MIPS_PATH
-      run: echo "::set-env name=MIPS_PATH::${GITHUB_WORKSPACE}/lib:${GITHUB_WORKSPACE}/lib/t:${MPTEST_PATH}"
+      run: echo "MIPS_PATH=${GITHUB_WORKSPACE}/lib:${GITHUB_WORKSPACE}/lib/t:${MPTEST_PATH}" >> $GITHUB_ENV
     - name: Test MP-Test
       run: |
         octave-cli --no-gui -p $MPTEST_PATH --eval mptestver
