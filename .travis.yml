@@ -12,7 +12,7 @@ addons:
     update: true
   homebrew:
     packages:
-    - octave        # octave 5.1.0
+    - octave        # octave 5.2.0
     update: true
 os:
 - linux
