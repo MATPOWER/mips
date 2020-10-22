@@ -19,7 +19,10 @@ jobs:
         sudo apt-get update -qq
     - name: Initialize Package Manager (Mac)
       if: startsWith(matrix.os, 'macos')
-      run: brew update
+      run: |
+        brew untap local/homebrew-openssl  # workaround for https://github.com/actions/virtual-environments/issues/1811
+        brew untap local/homebrew-python2  # workaround for https://github.com/actions/virtual-environments/issues/1811
+        brew update
     - name: Install GNU Octave (Linux)
       if: startsWith(matrix.os, 'ubuntu')
       run: |
