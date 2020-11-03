@@ -11,39 +11,44 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    steps: 
-    - uses: actions/checkout@v1
+    steps:
+    - uses: actions/checkout@v2
+
     - name: Initialize Package Manager (Linux)
       if: startsWith(matrix.os, 'ubuntu')
       run: sudo apt-get update -qq
+
     - name: Initialize Package Manager (Mac)
       if: startsWith(matrix.os, 'macos')
-      run: |
-        brew untap local/homebrew-openssl  # workaround for https://github.com/actions/virtual-environments/issues/1811
-        brew untap local/homebrew-python2  # workaround for https://github.com/actions/virtual-environments/issues/1811
-        brew update
+      run: brew update
+
     - name: Install GNU Octave (Linux)
       if: startsWith(matrix.os, 'ubuntu')
       run: |
         sudo apt-get install -y -qq liboctave-dev octave
         octave-cli --no-gui --eval ver
         echo "OCTAVE_VER=`octave-cli --no-gui --eval "fprintf('%s', ver('octave').Version)"`" >> $GITHUB_ENV
+
     - name: Install GNU Octave (Mac)
       if: startsWith(matrix.os, 'macos')
       run: |
         brew install octave
         octave-cli --no-gui --eval ver
         echo "OCTAVE_VER=`octave-cli --no-gui --eval "fprintf('%s', ver('octave').Version)"`" >> $GITHUB_ENV
+
     - name: Install MP-Test, Set MPTEST_PATH
       run: |
-        git clone --depth=50 https://github.com/MATPOWER/mptest.git $HOME/mptest
+        git clone --depth=1 https://github.com/MATPOWER/mptest.git $HOME/mptest
         echo "MPTEST_PATH=$HOME/mptest/lib:$HOME/mptest/lib/t" >> $GITHUB_ENV
+
     - name: Set MIPS_PATH
       run: echo "MIPS_PATH=${GITHUB_WORKSPACE}/lib:${GITHUB_WORKSPACE}/lib/t:${MPTEST_PATH}" >> $GITHUB_ENV
+
     - name: Test MP-Test
       run: |
         octave-cli --no-gui -p $MPTEST_PATH --eval mptestver
         octave-cli --no-gui -p $MPTEST_PATH --eval "test_mptest(0,1)"
+
     - name: Test MIPS
       run: |
         octave-cli --no-gui -p $MIPS_PATH --eval mipsver
