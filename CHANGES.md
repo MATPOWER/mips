@@ -2,6 +2,16 @@ Change history for MIPS
 =======================
 
 
+Changes since 1.4
+-----------------
+
+#### 9/28/22
+  - Add ability to return matrix factorization and reuse it on subsequent
+    calls to `mplinsolve()` when using `LU` as solver, by passing the returned
+    `info` struct containing the factors to subsequent calls via the
+    `lu_factors` option.
+
+
 Version 1.4 - *Oct 8, 2020*
 ---------------------------
 

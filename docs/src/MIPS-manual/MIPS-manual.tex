@@ -145,7 +145,7 @@
 \newcommand{\mipsurl}[0]{https://github.com/MATPOWER/mips}
 \newcommand{\mipslink}[0]{\href{\mipsurl}{\mips{}}}
 \newcommand{\mipsname}[0]{{{\bf M}{\sc atpower} \textbf{I}nterior \textbf{P}oint \textbf{S}olver}}
-\newcommand{\mipsver}[0]{1.4}
+\newcommand{\mipsver}[0]{1.5-dev}
 \newcommand{\mpom}[0]{\mbox{MP-Opt-Model}}
 \newcommand{\mpomurl}[0]{https://github.com/MATPOWER/mp-opt-model}
 \newcommand{\mpomlink}[0]{\href{\mpomurl}{\mpom{}}}
@@ -238,7 +238,7 @@ User's Manual}
 \vfill
 \begin{center}
 {\scriptsize
-\copyright~2009--2020~\PSERC{}\\
+\copyright~2009--2022~\PSERC{}\\
 All Rights Reserved}
 \end{center}
 
@@ -961,6 +961,7 @@ The \code{mplinsolve} function provides a common interface to several different 
 x = mplinsolve(A, b);
 x = mplinsolve(A, b, solver);
 x = mplinsolve(A, b, solver, opt);
+[x, info] = mplinsolve(A, b, ...);
 \end{Code}
 
 The \code{solver} argument can be one of the following:
@@ -972,6 +973,14 @@ The \code{solver} argument can be one of the following:
 \item \codeq{PARDISO} -- use optional third-party \pardiso{} solver\footnote{Requires the installation of an optional package. See Appendix~\ref{app:pardiso} for details.}
 \end{itemize}
 See \code{help mplinsolve} for more details.
+
+As of version 1.5, \code{mplinsolve{}} can optionally return the factorized matrix and use those factors to quickly solve for different values of the right hand side, by passing the returned \code{info} struct containing the factors to subsequent calls via the \code{lu\_factors} option.
+\begin{Code}
+[x0, opt.lu_factors] = mplinsolve(A, b0, 'LU');
+x1 = mplinsolve([], b1, 'LU', opt);
+x2 = mplinsolve([], b2, 'LU', opt);
+x3 = mplinsolve([], b3, 'LU', opt);
+\end{Code}
 
 Note that \mips{} uses \code{mplinsolve} to solve the Newton update step in \eqref{eq:ipm_reduced_system}.
 
@@ -1260,7 +1269,7 @@ The \href{https://matpower.org/docs/MIPS-manual-1.3.1.pdf}{\mips{} 1.3.1 User's 
 \subsection{Version 1.4 -- released Oct 8, 2020}
 \label{app:v14}
 
-The \href{https://matpower.org/docs/MIPS-manual-1.3.2.pdf}{\mips{} 1.4 User's Manual} is available online.\footnote{\url{https://matpower.org/docs/MIPS-manual-1.4.pdf}}
+The \href{https://matpower.org/docs/MIPS-manual-1.4.pdf}{\mips{} 1.4 User's Manual} is available online.\footnote{\url{https://matpower.org/docs/MIPS-manual-1.4.pdf}}
 
 \subsubsection*{New Features}
 \begin{itemize}
@@ -1290,6 +1299,36 @@ The \href{https://matpower.org/docs/MIPS-manual-1.3.2.pdf}{\mips{} 1.4 User's Ma
 \subsubsection*{Incompatible Changes}
 \begin{itemize}
 \item Calling \code{mips()} with \code{opt.linsolver} set to \codeq{PARDISO} now results in a fatal error if \pardiso{} is not installed, rather than warning and continuing with the default linear solver.
+\end{itemize}
+
+
+\subsection{Version 1.5 -- released ??? ?, 2022}
+\label{app:v15}
+
+The \href{https://matpower.org/docs/MIPS-manual-1.5.pdf}{\mips{} 1.5 User's Manual} is available online.\footnote{\url{https://matpower.org/docs/MIPS-manual-1.5.pdf}}
+
+\subsubsection*{New Features}
+\begin{itemize}
+\item Ability to return matrix factorization and reuse it on subsequent calls to \code{mplinsolve()} when using \codeq{LU} as solver, by passing the returned \code{info} struct containing the factors to subsequent calls via the \code{lu\_factors} option.
+\item New functions:
+    \begin{itemize}
+    \item \code{foo} does bar ...
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{Bugs Fixed}
+\begin{itemize}
+\item 
+\end{itemize}
+
+\subsubsection*{Other Changes}
+\begin{itemize}
+\item 
+\end{itemize}
+
+\subsubsection*{Incompatible Changes}
+\begin{itemize}
+\item 
 \end{itemize}
 
 
