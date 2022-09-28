@@ -974,7 +974,7 @@ The \code{solver} argument can be one of the following:
 \end{itemize}
 See \code{help mplinsolve} for more details.
 
-As of version 1.5, \code{mplinsolve{}} can optionally return the factorized matrix and use those factors to quickly solve for different values of the right hand side, by passing the returned \code{info} struct containing the factors to subsequent calls via the \code{lu\_factors} option.
+As of version 1.5, \code{mplinsolve{}} can optionally return the factorized matrix and use those factors to quickly solve for different values of the right hand side, by passing the returned \code{info} struct containing the factors to subsequent calls via the \code{lu\_factors} option. Transposed systems can be solved with the same factors by setting \code{opt.lu\_factors.t} to a true value.
 \begin{Code}
 [x0, opt.lu_factors] = mplinsolve(A, b0, 'LU');
 x1 = mplinsolve([], b1, 'LU', opt);
@@ -1309,7 +1309,7 @@ The \href{https://matpower.org/docs/MIPS-manual-1.5.pdf}{\mips{} 1.5 User's Manu
 
 \subsubsection*{New Features}
 \begin{itemize}
-\item Ability to return matrix factorization and reuse it on subsequent calls to \code{mplinsolve()} when using \codeq{LU} as solver, by passing the returned \code{info} struct containing the factors to subsequent calls via the \code{lu\_factors} option.
+\item Ability to return matrix factorization and reuse it on subsequent calls to \code{mplinsolve()} when using \codeq{LU} as solver, by passing the returned \code{info} struct containing the factors to subsequent calls via the \code{lu\_factors} option. Transposed systems can be solved with the same factors by setting \code{opt.lu\_factors.t} to a true value.
 \item New functions:
     \begin{itemize}
     \item \code{foo} does bar ...

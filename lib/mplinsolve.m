@@ -47,6 +47,8 @@ function [x, info] = mplinsolve(A, b, solver, opt)
 %                   L, U, P, Q      - 4 output UMFPACK, perm matrices
 %                   L, U, p, q, R   - 5 output UMFPACK, perm vec, row scaling
 %                   L, U, P, Q, R   - 5 output UMFPACK, perm mat, row scaling
+%               If an additional 't' field is present and true, the transposed
+%               system will be solved.
 %           pardiso : struct of PARDISO options (default shown in parens),
 %                 see PARDISO documentation for details
 %               verbose (0) - true or false
@@ -77,22 +79,43 @@ info = [];
 if length(solver) >= 2 && all(solver(1:2) == 'LU') && ...
         isfield(opt, 'lu_factors') && ~isempty(opt.lu_factors)
     f = opt.lu_factors;
-    if isfield(f, 'p')          %% permutation vectors
-        x = zeros(size(f.L, 1), 1);
-        if isfield(f, 'R')      %% 5 output LU: UMFPACK w/row scaling
-            x(f.q) = f.U \ ( f.L \ (f.R(:, f.p) \ b));
-        elseif isfield(f, 'qa') %% 3 output LU: Gilbert-Peierls alg
-            x(f.qa) = f.U \ ( f.L \ b(f.qa(f.p)) );
-        else                    %% 4 output LU: UMFPACK
-            x(f.q) = f.U \ ( f.L \ b(f.p) );
+    if isfield(f, 't') && f.t       %% solve transposed system
+        if isfield(f, 'p')          %% permutation vectors
+            x = zeros(size(f.L, 1), 1);
+            if isfield(f, 'R')      %% 5 output LU: UMFPACK w/row scaling
+                x = f.R(f.p, :) \ (f.L' \ ( f.U' \ b(f.q) ));
+            elseif isfield(f, 'qa') %% 3 output LU: Gilbert-Peierls alg
+                x(f.qa(f.p)) = f.L' \ ( f.U' \ b(f.qa) );
+            else                    %% 4 output LU: UMFPACK
+                x(f.p) = f.L' \ ( f.U' \ b(f.q) );
+            end
+        else                        %% permutation matrices
+            if isfield(f, 'R')      %% 5 output LU: UMFPACK w/row scaling
+                x = f.R \ (f.P' * ( f.L' \ (f.U' \ (f.Q' * b))) );
+            elseif isfield(f, 'Qa') %% 3 output LU: Gilbert-Peierls alg
+                x = f.Qa * f.P' * ( f.L' \ (f.U' \ (f.Qa' * b)) );
+            else                    %% 4 output LU: UMFPACK
+                x = f.P' * ( f.L' \ (f.U' \ (f.Q' * b)) );
+            end
         end
-    else                        %% permutation matrices
-        if isfield(f, 'R')      %% 5 output LU: UMFPACK w/row scaling
-            x = f.Q * ( f.U \ (f.L \ (f.P * (f.R \ b))) );
-        elseif isfield(f, 'Qa') %% 3 output LU: Gilbert-Peierls alg
-            x = f.Qa * ( f.U \ (f.L \ (f.P * f.Qa' * b)) );
-        else                    %% 4 output LU: UMFPACK
-            x = f.Q * ( f.U \ (f.L \ (f.P * b)) );
+    else                        %% solve non-transposed system
+        if isfield(f, 'p')          %% permutation vectors
+            x = zeros(size(f.L, 1), 1);
+            if isfield(f, 'R')      %% 5 output LU: UMFPACK w/row scaling
+                x(f.q) = f.U \ ( f.L \ (f.R(:, f.p) \ b));
+            elseif isfield(f, 'qa') %% 3 output LU: Gilbert-Peierls alg
+                x(f.qa) = f.U \ ( f.L \ b(f.qa(f.p)) );
+            else                    %% 4 output LU: UMFPACK
+                x(f.q) = f.U \ ( f.L \ b(f.p) );
+            end
+        else                        %% permutation matrices
+            if isfield(f, 'R')      %% 5 output LU: UMFPACK w/row scaling
+                x = f.Q * ( f.U \ (f.L \ (f.P * (f.R \ b))) );
+            elseif isfield(f, 'Qa') %% 3 output LU: Gilbert-Peierls alg
+                x = f.Qa * ( f.U \ (f.L \ (f.P * f.Qa' * b)) );
+            else                    %% 4 output LU: UMFPACK
+                x = f.Q * ( f.U \ (f.L \ (f.P * b)) );
+            end
         end
     end
 else
