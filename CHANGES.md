@@ -5,12 +5,14 @@ Change history for MIPS
 Changes since 1.4
 -----------------
 
-#### 9/28/22
-  - Add ability to return matrix factorization and reuse it on subsequent
-    calls to `mplinsolve()` when using `LU` as solver, by passing the returned
-    `info` struct containing the factors to subsequent calls via the
-    `lu_factors` option. Transposed systems can be solved with the same
-    factors by setting `opt.lu_factors.t` to a true value.
+#### 10/28/22
+  - Add to `mplinsolve()` the ability to return a struct containing the matrix
+    LU factorization, and to reuse this pre-factored matrix to solve
+    additional systems with different right-hand-sides by passing the struct
+    in place of the A matrix to subsequent calls.
+  - Add option to `mplinsolve()` to solve transposed systems by setting
+    `opt.tr` to 1, including when providing the pre-factored matrix for
+    the original, non-transposed system.
 
 
 Version 1.4 - *Oct 8, 2020*

@@ -1309,7 +1309,8 @@ The \href{https://matpower.org/docs/MIPS-manual-1.5.pdf}{\mips{} 1.5 User's Manu
 
 \subsubsection*{New Features}
 \begin{itemize}
-\item Ability to return matrix factorization and reuse it on subsequent calls to \code{mplinsolve()} when using \codeq{LU} as solver, by passing the returned \code{info} struct containing the factors to subsequent calls via the \code{lu\_factors} option. Transposed systems can be solved with the same factors by setting \code{opt.lu\_factors.t} to a true value.
+\item Add to \code{mplinsolve()} the ability to return a struct containing the matrix LU factorization, and to reuse this pre-factored matrix to solve additional systems with different right-hand-sides by passing the struct in place of the A matrix to subsequent calls.
+\item Add option to \code{mplinsolve()} to solve transposed systems by setting \code{opt.tr} to 1, including when providing the pre-factored matrix for the original, non-transposed system.
 \item New functions:
     \begin{itemize}
     \item \code{foo} does bar ...

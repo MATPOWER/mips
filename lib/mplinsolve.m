@@ -1,17 +1,30 @@
-function [x, info] = mplinsolve(A, b, solver, opt)
+function [x, f] = mplinsolve(A, b, solver, opt)
 %MPLINSOLVE  Solves A * x = b using specified solver
 %   X = MPLINSOLVE(A, B)
 %   X = MPLINSOLVE(A, B, SOLVER)
 %   X = MPLINSOLVE(A, B, SOLVER, OPT)
-%   [X, INFO] = MPLINSOLVE(...)
+%   X = MPLINSOLVE(FACTORS, B, ...)
+%   FACTORS = MPLINSOLVE(A)
+%   FACTORS = MPLINSOLVE(A, [], ...)
+%   [X, FACTORS] = MPLINSOLVE(A, B, 'LU' ...)
 %
-%   Solves the linear system of equations A * x = b, using the selected
+%   Solves the linear system of equations A * x == b, using the selected
 %   solver.
 %
 %   Inputs:
-%       A      : sparse matrix
-%       B      : full vector or matrix
-%       SOLVER : ('') selected linear system solver
+%       A       : sparse matrix
+%       FACTORS : struct containing (e.g. LU) factors of A, from previous
+%           call to MPLINSOLVE, includes the field:
+%               type - number identifying which of the following sets of
+%                      additional fields are included:
+%               1:  L, U, p, qa     - 3 output Gilbert-Peierls, perm vectors
+%               2:  L, U, P, Qa     - 3 output Gilbert-Peierls, perm matrices
+%               3:  L, U, p, q      - 4 output UMFPACK, perm vectors
+%               4:  L, U, P, Q      - 4 output UMFPACK, perm matrices
+%               5:  L, U, p, q, R   - 5 output UMFPACK, perm vec, row scaling
+%               6:  L, U, P, Q, R   - 5 output UMFPACK, perm mat, row scaling
+%       B       : full vector or matrix
+%       SOLVER  : ('') selected linear system solver
 %           ''  - use default solver, currently this is
 %                   always the built-in backslash operator
 %           '\' - built-in backslash operator
@@ -38,17 +51,6 @@ function [x, info] = mplinsolve(A, b, solver, opt)
 %               vec (1)  - use permutation vectors instead of matrices
 %                   (permutation matrices used by default for MATLAB < 7.3)
 %               thresh   - pivot threshold, see 'help lu' for details
-%           lu_factors - struct with factors from previous LU factorization
-%               (overrides provided A matrix), consisting of one of the
-%               following sets of fields:
-%                   L, U, p, qa     - 3 output Gilbert-Peierls, perm vectors
-%                   L, U, P, Qa     - 3 output Gilbert-Peierls, perm matrices
-%                   L, U, p, q      - 4 output UMFPACK, perm vectors
-%                   L, U, P, Q      - 4 output UMFPACK, perm matrices
-%                   L, U, p, q, R   - 5 output UMFPACK, perm vec, row scaling
-%                   L, U, P, Q, R   - 5 output UMFPACK, perm mat, row scaling
-%               If an additional 't' field is present and true, the transposed
-%               system will be solved.
 %           pardiso : struct of PARDISO options (default shown in parens),
 %                 see PARDISO documentation for details
 %               verbose (0) - true or false
@@ -58,6 +60,11 @@ function [x, info] = mplinsolve(A, b, solver, opt)
 %                   1st, 2nd columns are index, value of parameter respectively
 %               dparm ([])  - n x 2 matrix of double parameters
 %                  1st, 2nd columns are index, value of parameter respectively
+%           tr (0) : if true, solve transposed system A' * x = b
+%
+%   Outputs:
+%       X : solution vector satisfying A * x == b
+%       FACTORS : see description under Inputs
 
 %   MIPS
 %   Copyright (c) 2015-2022, Power Systems Engineering Research Center (PSERC)
@@ -74,54 +81,26 @@ if nargin < 4
     end
 end
 
-info = [];
-
-if length(solver) >= 2 && all(solver(1:2) == 'LU') && ...
-        isfield(opt, 'lu_factors') && ~isempty(opt.lu_factors)
-    f = opt.lu_factors;
-    if isfield(f, 't') && f.t       %% solve transposed system
-        if isfield(f, 'p')          %% permutation vectors
-            x = zeros(size(f.L, 1), 1);
-            if isfield(f, 'R')      %% 5 output LU: UMFPACK w/row scaling
-                x = f.R(f.p, :) \ (f.L' \ ( f.U' \ b(f.q) ));
-            elseif isfield(f, 'qa') %% 3 output LU: Gilbert-Peierls alg
-                x(f.qa(f.p)) = f.L' \ ( f.U' \ b(f.qa) );
-            else                    %% 4 output LU: UMFPACK
-                x(f.p) = f.L' \ ( f.U' \ b(f.q) );
-            end
-        else                        %% permutation matrices
-            if isfield(f, 'R')      %% 5 output LU: UMFPACK w/row scaling
-                x = f.R \ (f.P' * ( f.L' \ (f.U' \ (f.Q' * b))) );
-            elseif isfield(f, 'Qa') %% 3 output LU: Gilbert-Peierls alg
-                x = f.Qa * f.P' * ( f.L' \ (f.U' \ (f.Qa' * b)) );
-            else                    %% 4 output LU: UMFPACK
-                x = f.P' * ( f.L' \ (f.U' \ (f.Q' * b)) );
-            end
-        end
-    else                        %% solve non-transposed system
-        if isfield(f, 'p')          %% permutation vectors
-            x = zeros(size(f.L, 1), 1);
-            if isfield(f, 'R')      %% 5 output LU: UMFPACK w/row scaling
-                x(f.q) = f.U \ ( f.L \ (f.R(:, f.p) \ b));
-            elseif isfield(f, 'qa') %% 3 output LU: Gilbert-Peierls alg
-                x(f.qa) = f.U \ ( f.L \ b(f.qa(f.p)) );
-            else                    %% 4 output LU: UMFPACK
-                x(f.q) = f.U \ ( f.L \ b(f.p) );
-            end
-        else                        %% permutation matrices
-            if isfield(f, 'R')      %% 5 output LU: UMFPACK w/row scaling
-                x = f.Q * ( f.U \ (f.L \ (f.P * (f.R \ b))) );
-            elseif isfield(f, 'Qa') %% 3 output LU: Gilbert-Peierls alg
-                x = f.Qa * ( f.U \ (f.L \ (f.P * f.Qa' * b)) );
-            else                    %% 4 output LU: UMFPACK
-                x = f.Q * ( f.U \ (f.L \ (f.P * b)) );
-            end
-        end
-    end
+%% solve transpose?
+if isfield(opt, 'tr')
+    tr = opt.tr;
 else
+    tr = 0;
+end
+have_f = isstruct(A);
+have_b = nargin >= 2 && ~isempty(b);
+is_LU = length(solver) >= 2 && all(solver(1:2) == 'LU');
+if ~is_LU && ~have_b
+    solver = 'LU';
+    is_LU = 1;
+end
+is_LU = is_LU || have_f;
+
+%% prepare LU factors, if necessary
+if have_f
+    f = A;      %% factors provided
+elseif is_LU    %% perform factorization if it's LU & we have A (not factors)
     switch solver
-        case {'', '\'}  %% use built-in \ operator
-            x = A \ b;
         case 'LU3'      %% 3 output LU: Gilbert-Peierls alg, perm vec, 1.0 piv thresh
             q = amd(A);     %% permutation vector for AMD reordering
             if issparse(A)
@@ -129,33 +108,17 @@ else
             else
                 [L, U, p] = lu(A(q,q), 'vector');
             end
-            x = zeros(size(A, 1), 1);
-            x(q) = U \ ( L \ b(q(p)) );
-            if nargout > 1
-                info = struct('L', L, 'U', U, 'p', p, 'qa', q);
-            end
+            f = struct('type', 1, 'L', L, 'U', U, 'p', p, 'qa', q);
         case 'LU3a'     %% 3 output LU: Gilbert-Peierls alg, permutation vectors
             q = amd(A);     %% permutation vector for AMD reordering
             [L, U, p] = lu(A(q,q), 'vector');
-            x = zeros(size(A, 1), 1);
-            x(q) = U \ ( L \ b(q(p)) );
-            if nargout > 1
-                info = struct('L', L, 'U', U, 'p', p, 'qa', q);
-            end
+            f = struct('type', 1, 'L', L, 'U', U, 'p', p, 'qa', q);
         case 'LU4'      %% 4 output LU: UMFPACK, permutation vectors
             [L, U, p, q] = lu(A, 'vector');
-            x = zeros(size(A, 1), 1);
-            x(q) = U \ ( L \ b(p));
-            if nargout > 1
-                info = struct('L', L, 'U', U, 'p', p, 'q', q);
-            end
+            f = struct('type', 3, 'L', L, 'U', U, 'p', p, 'q', q);
         case 'LU5'      %% 5 output LU: UMFPACK w/row scaling, permutation vectors
             [L, U, p, q, R] = lu(A, 'vector');
-            x = zeros(size(A, 1), 1);
-            x(q) = U \ ( L \ (R(:, p) \ b));
-            if nargout > 1
-                info = struct('L', L, 'U', U, 'p', p, 'q', q, 'R', R);
-            end
+            f = struct('type', 5, 'L', L, 'U', U, 'p', p, 'q', q, 'R', R);
         case 'LU3m'     %% 3 output LU: Gilbert-Peierls alg, perm mat, 1.0 piv thresh
             Q = sparse(amd(A), 1:size(A, 1), 1);    %% permutation matrix for AMD reordering
             if issparse(A)
@@ -163,29 +126,17 @@ else
             else
                 [L, U, P] = lu(Q'*A*Q);
             end
-            x = Q * ( U \ ( L \ (P * Q' * b)) );
-            if nargout > 1
-                info = struct('L', L, 'U', U, 'P', P, 'Qa', Q);
-            end
+            f = struct('type', 2, 'L', L, 'U', U, 'P', P, 'Qa', Q);
         case 'LU3am'    %% 3 output LU: Gilbert-Peierls alg, permutation matrices
             Q = sparse(amd(A), 1:size(A, 1), 1);  %% permutation matrix for AMD reordering
             [L, U, P] = lu(Q'*A*Q);
-            x = Q * ( U \ ( L \ (P * Q' * b)) );
-            if nargout > 1
-                info = struct('L', L, 'U', U, 'P', P, 'Qa', Q);
-            end
+            f = struct('type', 2, 'L', L, 'U', U, 'P', P, 'Qa', Q);
         case 'LU4m'     %% 4 output LU: UMFPACK, permutation matrices
             [L, U, P, Q] = lu(A);
-            x = Q * (U \ (L \ (P * b)));
-            if nargout > 1
-                info = struct('L', L, 'U', U, 'P', P, 'Q', Q);
-            end
+            f = struct('type', 4, 'L', L, 'U', U, 'P', P, 'Q', Q);
         case 'LU5m'     %% 5 output LU: UMFPACK w/row scaling, permutation matrices
             [L, U, P, Q, R] = lu(A);
-            x = Q * (U \ (L \ (P * (R \ b))));
-            if nargout > 1
-                info = struct('L', L, 'U', U, 'P', P, 'Q', Q, 'R', R);
-            end
+            f = struct('type', 6, 'L', L, 'U', U, 'P', P, 'Q', Q, 'R', R);
         case 'LU'       %% explicit LU, with options struct
             %% default options
             nout = 4;               %% 4 output args, UMFPACK
@@ -217,11 +168,7 @@ else
                         else
                             [L, U, p] = lu(A(q,q), thresh, 'vector');
                         end
-                        x = zeros(n, 1);
-                        x(q) = U \ ( L \ b(q(p)) );
-                        if nargout > 1
-                            info = struct('L', L, 'U', U, 'p', p, 'qa', q);
-                        end
+                        f = struct('type', 1, 'L', L, 'U', U, 'p', p, 'qa', q);
                     else
                         Q = sparse(q, 1:n, 1);  %% permutation matrix for AMD reordering
                         if isempty(thresh)
@@ -229,103 +176,142 @@ else
                         else
                             [L, U, P] = lu(Q'*A*Q, thresh);
                         end
-                        x = Q * ( U \ ( L \ (P * Q' * b)) );
-                        if nargout > 1
-                            info = struct('L', L, 'U', U, 'P', P, 'Qa', Q);
-                        end
+                        f = struct('type', 2, 'L', L, 'U', U, 'P', P, 'Qa', Q);
                     end
                 case 4      %% 4 output args: UMFPACK
                     if vec
                         [L, U, p, q] = lu(A, 'vector');
-                        x = zeros(size(A, 1), 1);
-                        x(q) = U \ ( L \ b(p));
-                        if nargout > 1
-                            info = struct('L', L, 'U', U, 'p', p, 'q', q);
-                        end
+                        f = struct('type', 3, 'L', L, 'U', U, 'p', p, 'q', q);
                     else
                         [L, U, P, Q] = lu(A);
-                        x = Q * (U \ (L \ (P * b)));
-                        if nargout > 1
-                            info = struct('L', L, 'U', U, 'P', P, 'Q', Q);
-                        end
+                        f = struct('type', 4, 'L', L, 'U', U, 'P', P, 'Q', Q);
                     end
                 case 5      %% 5 output args: UMFPACK w/row scaling
                     if vec
                         [L, U, p, q, R] = lu(A, 'vector');
-                        x = zeros(size(A, 1), 1);
-                        x(q) = U \ ( L \ (R(:, p) \ b));
-                        if nargout > 1
-                            info = struct('L', L, 'U', U, 'p', p, 'q', q, 'R', R);
-                        end
+                        f = struct('type', 5, 'L', L, 'U', U, 'p', p, 'q', q, 'R', R);
                     else
                         [L, U, P, Q, R] = lu(A);
-                        x = Q * (U \ (L \ (P * (R \ b))));
-                        if nargout > 1
-                            info = struct('L', L, 'U', U, 'P', P, 'Q', Q, 'R', R);
-                        end
+                        f = struct('type', 6, 'L', L, 'U', U, 'P', P, 'Q', Q, 'R', R);
                     end
             end
-        case {'PARDISO'}
-            %% set default options
-            verbose = false;
-            mtype = 11;
-            pardiso_solver = 0;
-
-            %% override if provided via opt
-            if ~isempty(opt) && isfield(opt, 'pardiso')
-                if isfield(opt.pardiso, 'verbose') && opt.pardiso.verbose
-                    verbose = true;
-                end
-                if isfield(opt.pardiso, 'mtype')
-                    mtype = opt.pardiso.mtype;
-                end
-                if isfield(opt.pardiso, 'solver')
-                    pardiso_solver = opt.pardiso.solver;
-                end
-            end
-
-            %% begin setup and solve
-            v6 = have_feature('pardiso_object');
-            if v6               %% PARDISO v6+
-                id = 1;
-                p = pardiso(id, mtype, pardiso_solver);
-                if verbose
-                    p.verbose();
-                end
-            else                %% PARDISO v5
-                p = pardisoinit(mtype, pardiso_solver);
-            end
-            if ~isempty(opt) && isfield(opt, 'pardiso')
-                if isfield(opt.pardiso, 'iparm') && ~isempty(opt.pardiso.iparm)
-                    p.iparm(opt.pardiso.iparm(:, 1)) = opt.pardiso.iparm(:, 2);
-                end
-                if isfield(opt.pardiso, 'dparm') && ~isempty(opt.pardiso.dparm)
-                    p.dparm(opt.pardiso.dparm(:, 1)) = opt.pardiso.dparm(:, 2);
-                end
-            end
-            if v6 || abs(mtype) == 2 || mtype == 6  %% need non-zero diagonal
-                nx = size(A, 1);
-                if abs(mtype) == 2 || mtype == 6    %% symmetric
-                    myeps = 1e-14;
-                    A = tril(A);
-                else                                %% non-symmetric
-                    myeps = 1e-8;
-                end
-                A = A + myeps * speye(nx, nx);
-            end
-            if v6
-                p.factorize(id, A);
-                x = p.solve(id, A, b);
-                p.free(id);
-                p.clear();
-            else
-                p = pardisoreorder(A, p, verbose);
-                p = pardisofactor(A, p, verbose);
-                [x, p] = pardisosolve(A, b, p, verbose);
-                pardisofree(p);
-            end
-        otherwise
-            warning('mplinsolve: ''%s'' is not a valid value for SOLVER, using default.', solver);
-            x = A \ b;
     end
+end
+
+%% solve system
+if have_b
+    if is_LU        %% use LU factors
+        if tr                       %% solve transposed system
+            switch f.type
+                case 1      %% 3 output LU: Gilbert-Peierls alg, perm vectors
+                    x = zeros(size(f.L, 1), 1);
+                    x(f.qa(f.p)) = f.L' \ ( f.U' \ b(f.qa) );
+                case 2      %% 3 output LU: Gilbert-Peierls alg, perm matrices
+                    x = f.Qa * f.P' * ( f.L' \ (f.U' \ (f.Qa' * b)) );
+                case 3      %% 4 output LU: UMFPACK, perm vectors
+                    x = zeros(size(f.L, 1), 1);
+                    x(f.p) = f.L' \ ( f.U' \ b(f.q) );
+                case 4      %% 4 output LU: UMFPACK, perm matrices
+                    x = f.P' * ( f.L' \ (f.U' \ (f.Q' * b)) );
+                case 5      %% 5 output LU: UMFPACK w/row scaling, perm vectors
+                    x = f.R(f.p, :) \ (f.L' \ ( f.U' \ b(f.q) ));
+                case 6      %% 5 output LU: UMFPACK w/row scaling, perm vectors
+                    x = f.R \ (f.P' * ( f.L' \ (f.U' \ (f.Q' * b))) );
+            end
+        else                        %% solve non-transposed system
+            switch f.type
+                case 1      %% 3 output LU: Gilbert-Peierls alg, perm vectors
+                    x = zeros(size(f.L, 1), 1);
+                    x(f.qa) = f.U \ ( f.L \ b(f.qa(f.p)) );
+                case 2      %% 3 output LU: Gilbert-Peierls alg, perm matrices
+                    x = f.Qa * ( f.U \ (f.L \ (f.P * f.Qa' * b)) );
+                case 3      %% 4 output LU: UMFPACK, perm vectors
+                    x = zeros(size(f.L, 1), 1);
+                    x(f.q) = f.U \ ( f.L \ b(f.p) );
+                case 4      %% 4 output LU: UMFPACK, perm matrices
+                    x = f.Q * ( f.U \ (f.L \ (f.P * b)) );
+                case 5      %% 5 output LU: UMFPACK w/row scaling, perm vectors
+                    x = zeros(size(f.L, 1), 1);
+                    x(f.q) = f.U \ ( f.L \ (f.R(:, f.p) \ b));
+                case 6      %% 5 output LU: UMFPACK w/row scaling, perm vectors
+                    x = f.Q * ( f.U \ (f.L \ (f.P * (f.R \ b))) );
+            end
+        end
+    else        %% not LU
+        if tr                       %% use transposed system
+            A = A';
+        end
+
+        switch solver
+            case {'', '\'}  %% use built-in \ operator
+                x = A \ b;
+            case {'PARDISO'}
+                %% set default options
+                verbose = false;
+                mtype = 11;
+                pardiso_solver = 0;
+
+                %% override if provided via opt
+                if ~isempty(opt) && isfield(opt, 'pardiso')
+                    if isfield(opt.pardiso, 'verbose') && opt.pardiso.verbose
+                        verbose = true;
+                    end
+                    if isfield(opt.pardiso, 'mtype')
+                        mtype = opt.pardiso.mtype;
+                    end
+                    if isfield(opt.pardiso, 'solver')
+                        pardiso_solver = opt.pardiso.solver;
+                    end
+                end
+
+                %% begin setup and solve
+                v6 = have_feature('pardiso_object');
+                if v6               %% PARDISO v6+
+                    id = 1;
+                    p = pardiso(id, mtype, pardiso_solver);
+                    if verbose
+                        p.verbose();
+                    end
+                else                %% PARDISO v5
+                    p = pardisoinit(mtype, pardiso_solver);
+                end
+                if ~isempty(opt) && isfield(opt, 'pardiso')
+                    if isfield(opt.pardiso, 'iparm') && ~isempty(opt.pardiso.iparm)
+                        p.iparm(opt.pardiso.iparm(:, 1)) = opt.pardiso.iparm(:, 2);
+                    end
+                    if isfield(opt.pardiso, 'dparm') && ~isempty(opt.pardiso.dparm)
+                        p.dparm(opt.pardiso.dparm(:, 1)) = opt.pardiso.dparm(:, 2);
+                    end
+                end
+                if v6 || abs(mtype) == 2 || mtype == 6  %% need non-zero diagonal
+                    nx = size(A, 1);
+                    if abs(mtype) == 2 || mtype == 6    %% symmetric
+                        myeps = 1e-14;
+                        A = tril(A);
+                    else                                %% non-symmetric
+                        myeps = 1e-8;
+                    end
+                    A = A + myeps * speye(nx, nx);
+                end
+                if v6
+                    p.factorize(id, A);
+                    x = p.solve(id, A, b);
+                    p.free(id);
+                    p.clear();
+                else
+                    p = pardisoreorder(A, p, verbose);
+                    p = pardisofactor(A, p, verbose);
+                    [x, p] = pardisosolve(A, b, p, verbose);
+                    pardisofree(p);
+                end
+            otherwise
+                warning('mplinsolve: ''%s'' is not a valid value for SOLVER, using default.', solver);
+                x = A \ b;
+        end
+    end
+end
+
+%% return only factors
+if ~have_b
+    x = f;
 end
