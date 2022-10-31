@@ -961,7 +961,10 @@ The \code{mplinsolve} function provides a common interface to several different 
 x = mplinsolve(A, b);
 x = mplinsolve(A, b, solver);
 x = mplinsolve(A, b, solver, opt);
-[x, info] = mplinsolve(A, b, ...);
+x = mplinsolve(factors, b, ...);
+factors = mplinsolve(A);
+factors = mplinsolve(A, [], ...);
+[x, factors] = mplinsolve(A, b, 'LU' ...);
 \end{Code}
 
 The \code{solver} argument can be one of the following:
@@ -974,12 +977,23 @@ The \code{solver} argument can be one of the following:
 \end{itemize}
 See \code{help mplinsolve} for more details.
 
-As of version 1.5, \code{mplinsolve{}} can optionally return the factorized matrix and use those factors to quickly solve for different values of the right hand side, by passing the returned \code{info} struct containing the factors to subsequent calls via the \code{lu\_factors} option. Transposed systems can be solved with the same factors by setting \code{opt.lu\_factors.t} to a true value.
+As of version 1.5, \code{mplinsolve{}} can optionally return a struct containing the matrix LU factorization. It can then use these matrix factors to solve systems with different right-hand-sides by passing the struct in place of the $A$ matrix to subsequent calls. Transposed systems can be solved by setting \code{opt.tr} to 1, including when providing the matrix factors for the original, non-transposed system.
+
+For example, to solve $A x_i = b_i$ for $x_i$ for various values of $b_i$, use the following.
 \begin{Code}
-[x0, opt.lu_factors] = mplinsolve(A, b0, 'LU');
-x1 = mplinsolve([], b1, 'LU', opt);
-x2 = mplinsolve([], b2, 'LU', opt);
-x3 = mplinsolve([], b3, 'LU', opt);
+factors = mplinsolve(A);
+x1 = mplinsolve(factors, b1);
+x2 = mplinsolve(factors, b2);
+x3 = mplinsolve(factors, b3);
+...
+\end{Code}
+Similarly, to solve $\trans{A} y_i = c_i$ for $y_i$ for various values of $c_i$, from the previously computed factors of the original $A$, use the following.
+\begin{Code}
+opt = struct('tr', 1);
+y1 = mplinsolve(factors, c1, 'LU', opt);
+y2 = mplinsolve(factors, c2, 'LU', opt);
+y3 = mplinsolve(factors, c3, 'LU', opt);
+...
 \end{Code}
 
 Note that \mips{} uses \code{mplinsolve} to solve the Newton update step in \eqref{eq:ipm_reduced_system}.
