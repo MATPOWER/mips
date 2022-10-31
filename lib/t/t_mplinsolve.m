@@ -13,7 +13,7 @@ if nargin < 1
     quiet = 0;
 end
 
-t_begin(170, quiet);
+t_begin(180, quiet);
 
 isoctave = exist('OCTAVE_VERSION', 'builtin') == 5;
 if isoctave
@@ -474,6 +474,15 @@ x = mplinsolve(full(A), b, '\');
 t_is(x, ex, 12, [t 'x (full A)']);
 t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
 
+t = '\ (transpose) : ';
+opt = struct('tr', 1);
+x = mplinsolve(A', b, '\', opt);
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+x = mplinsolve(full(A'), b, '\', opt);
+t_is(x, ex, 12, [t 'x (full A)']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
+
 t = 'LU : ';
 x = mplinsolve(A, b, 'LU');
 t_is(x, ex, 12, [t 'x']);
@@ -482,6 +491,19 @@ if skipcrash
     t_skip(2, [t 'potential MATLAB crash with non-sparse A']);
 else
     x = mplinsolve(full(A), b, 'LU');
+    t_is(x, ex, 12, [t 'x (full A)']);
+    t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
+end
+
+t = 'LU (transpose) : ';
+opt = struct('tr', 1);
+x = mplinsolve(A', b, 'LU', opt);
+t_is(x, ex, 12, [t 'x']);
+t_is(norm(b - A*x), 0, 12, [t '||b - A*x||']);
+if skipcrash
+    t_skip(2, [t 'potential MATLAB crash with non-sparse A']);
+else
+    x = mplinsolve(full(A'), b, 'LU', opt);
     t_is(x, ex, 12, [t 'x (full A)']);
     t_is(norm(b - A*x), 0, 12, [t '||b - A*x|| (full A)']);
 end
@@ -1007,6 +1029,12 @@ if have_feature('pardiso')
     t_is(x, ex, tols(1), [t 'x']);
     t_is(norm(b - A*x), 0, tols(2), [t '||b - A*x||']);
 
+    t = 'PARDISO (direct, transpose) : ';
+    opt = struct('pardiso', struct('solver', 0, 'tr', 1, 'verbose', vb));
+    x = mplinsolve(A', b, 'PARDISO', opt);
+    t_is(x, ex, tols(1), [t 'x']);
+    t_is(norm(b - A*x), 0, tols(2), [t '||b - A*x||']);
+
     t = 'PARDISO (direct, symmetric indefinite) : ';
     opt = struct('pardiso', struct('solver', 0, 'mtype', -2, 'verbose', vb));
     x = mplinsolve(A, b, 'PARDISO', opt);
@@ -1019,7 +1047,7 @@ if have_feature('pardiso')
     t_is(x, ex, tols(5), [t 'x']);
     t_is(norm(b - A*x), 0, tols(6), [t '||b - A*x||']);
 else
-    t_skip(6, ['PARDISO not available']);
+    t_skip(8, ['PARDISO not available']);
 end
 
 if isoctave
