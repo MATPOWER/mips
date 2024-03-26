@@ -13,7 +13,7 @@ function rv = mipsver(varargin)
 % mipsver without assigning the return value prints the version and
 % release date of the current installation of MIPS.
 %
-%   See also mpver.
+% See also mpver.
 
 %   MIPS
 %   Copyright (c) 2010-2024, Power Systems Engineering Research Center (PSERC)

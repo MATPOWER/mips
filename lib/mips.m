@@ -34,7 +34,7 @@ function [x, f, eflag, output, lambda] = mips(f_fcn, x0, A, l, u, xmin, xmax, gh
 %
 % .. math:: \g(\x) = 0
 % .. math:: \h(\x) \le 0
-% .. math:: \param{\rvec{l}} \le \param{\cmat{A}} \x \le \param{\rvec{u}}
+% .. math:: \param{\rvec{l}} \le \param{\rmat{A}} \x \le \param{\rvec{u}}
 %   :label: eq_mips_lin_constraint
 % .. math:: \param{\x}_\mathrm{min} \le \x \le \param{\x}_\mathrm{max}
 %   :label: eq_mips_var_bounds
