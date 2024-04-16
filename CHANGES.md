@@ -5,6 +5,10 @@ Change history for MIPS
 since 1.5
 ---------
 
+#### 4/16/24
+  - Add `full_hist` option to enable saving in `output.hist` trajectories
+    of `x`, `z`, `g`, `h`, `lam`, and `mu` (issue [#4][2]).
+
 #### 3/12/24
   - Add Sphinx-based Reference documentation.
 
@@ -283,3 +287,4 @@ Version 1.0b1 - *Dec 24, 2009* (released with MATPOWER 4.0b1)
 
 ----
 [1]: https://travis-ci.org
+[2]: https://github.com/MATPOWER/mips/issues/4
