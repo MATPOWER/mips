@@ -12,8 +12,12 @@ Pre-release
     up-to-date.
   - Create `docs/relnotes/MIPS-Release-Notes-#.#.md` document from
     Appendix C of `MIPS-manual.tex`.
+- Update date in Copyright line in:
+  - `LICENSE`
+  - `docs/sphinx/source/conf.py`.
 - Update version number and date in:
   - `mipsver.m`
+  - `docs/sphinx/source/conf.py`
   - `lib/Contents.m`
   - `docs/relnotes/MIPS-Release-Notes-#.#.md`
   - `docs/src/MIPS-manual/MIPS-manual.tex`
@@ -24,7 +28,6 @@ Pre-release
   - Sphinx docs
     - `mp-docs-shared/preamble.tex.txt` - \mipsver
     - `mp-docs-shared/prolog.rst.txt` - in URL in raw-html for |MIPSman|
-  - Copyright line in `LICENSE`.
 - In `README.md` and `docs/src/MIPS-manual/MIPS-manual.tex`
   - update output of:
     - `test_mips` in Section 2.2
@@ -37,7 +40,7 @@ Pre-release
   - Make updates for current version specific citations:
     - version number (3 places)
     - year
-    - latest version DOI, current is: 10.5281/zenodo.7430306
+    - latest version DOI, current is: 10.5281/zenodo.11176870
       - (update here each time)
     ... in the following places ...
     - CITATION file
@@ -50,27 +53,26 @@ Pre-release
       - search citations in all other projects being updated simultaneously
         - MATPOWER-manual.tex
         - MP-Opt-Model-manual.tex
-- Create `MIPS-manual.pdf` from `MIPS-manual.tex`
-  - move to `docs`
-  - make copy named `MIPS-manual-x.x.pdf`
-    - copy to `docs` directory of `matpower.org-static` git repo
-      - update `MIPS-manual.pdf` symlink on `https://matpower.org/docs/` to point
-        to new `MIPS-manual-x.x.pdf` (replaces existing current version)
-        - `cd dev/projects/matpower.org-static/docs`
-        - `rm MIPS-manual.pdf`
-        - `ln -s ./MIPS-manual-x.x.pdf MIPS-manual.pdf`
-      - commit & push, then pull to matpower.org
-    - upload `MIPS-manual-x.x.pdf` to Zenodo and finish entry for "New Version"
-      - update:
-        - Publication date
-        - Version
-        - Identifiers:
-          - version number in "identical to"
-  - add link on `https://matpower.org/doc/manuals/` page
+- Create `MIPS-manual.pdf` from `MIPS-manual.tex` and move to `docs`.
 - Add release notice with date and version in `CHANGES.md`.
 - Commit all changes to `prep-for-release`.
 - Push `prep-for-release` to GitHub.
 - Make sure CI checks are ok.
+- Make copy of `docs/MIPS-manual.pdf` named `MIPS-manual-x.x.pdf`
+  - copy to `docs` directory of `matpower.org-static` git repo
+    - update `MIPS-manual.pdf` symlink on `https://matpower.org/docs/` to point
+      to new `MIPS-manual-x.x.pdf` (replaces existing current version)
+      - `cd dev/projects/matpower.org-static/docs`
+      - `rm MIPS-manual.pdf`
+      - `ln -s ./MIPS-manual-x.x.pdf MIPS-manual.pdf`
+    - commit & push, then pull to matpower.org
+  - upload `MIPS-manual-x.x.pdf` to Zenodo and finish entry for "New Version"
+    - update:
+      - Publication date
+      - Version
+      - Identifiers:
+        - version number in "identical to"
+- Add link on `https://matpower.org/doc/manuals/` page
 
 
 Release
