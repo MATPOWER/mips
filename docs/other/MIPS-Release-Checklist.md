@@ -22,7 +22,7 @@ Pre-release
   - `docs/relnotes/MIPS-Release-Notes-#.#.md`
   - `docs/src/MIPS-manual/MIPS-manual.tex`
     - title page
-    - copyright
+    - copyright (front page and LICENSE text)
     - Appendix C Release History
     - `\mipsver` (update `\mpver`, `\mptestver`, `\mpomver`, `\mostver` too)
   - Sphinx docs
