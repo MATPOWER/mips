@@ -1036,6 +1036,11 @@ The following are private functions that implement detection of specific optiona
 
 This function implements the \codeq{lu\_vec} tag for \code{have\_feature} to detect support for the \code{lu(..., \textquotesingle{}vector\textquotesingle{})} syntax.
 
+\subsubsection{\tt have\_feature\_mips}
+\label{sec:have_feature_mips}
+
+This function implements the \codeq{mips} tag for \code{have\_feature} to detect availability/version for \code{mips()}.
+
 \subsubsection{\tt have\_feature\_pardiso\_legacy}
 \label{sec:have_feature_pardiso_legacy}
 
@@ -1339,6 +1344,16 @@ The \href{https://matpower.org/docs/MIPS-manual-1.5.1.pdf}{\mips{} 1.5.1 User's 
 \item Add \code{full\_hist} option to enable saving in \code{output.hist}
     trajectories of \code{x}, \code{z}, \code{g}, \code{h}, \code{lam}, and
     \code{mu} (issue \#4).
+\end{itemize}
+
+\subsection{Version 1.5.2 -- released Jul 5, 2025}
+\label{app:v152}
+
+The \href{https://matpower.org/docs/MIPS-manual-1.5.2.pdf}{\mips{} 1.5.2 User's Manual} is available online.\footnote{\url{https://matpower.org/docs/MIPS-manual-1.5.2.pdf}}
+
+\subsubsection*{New Features}
+\begin{itemize}
+\item New feature detection function \code{have\_feature\_mips()}, providing implementation of \codeq{mips} tag for \code{have\_feature()}.
 \end{itemize}
 
 

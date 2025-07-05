@@ -2,6 +2,10 @@ Change history for MIPS
 =======================
 
 
+#### 5/10/24
+  - Add feature detection function `have_feature_mips()`, providing
+    implementation of `'mips'` tag for `have_feature()`.
+
 Version 1.5.1 - *May 10, 2024*
 ------------------------------
 
