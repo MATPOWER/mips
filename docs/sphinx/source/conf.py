@@ -22,7 +22,7 @@ copyright = '2009-2025, Power Systems Engineering Research Center (PSERC)'
 author = 'Ray D. Zimmerman, Hongye Wang'
 
 # The full version, including alpha/beta/rc tags
-release = '1.5.1'
+release = '1.5.2'
 
 
 # -- General configuration ---------------------------------------------------
