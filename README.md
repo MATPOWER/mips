@@ -36,6 +36,7 @@ of MATLAB or Octave, including setting up your MATLAB/Octave path.
 2.  Add the following directories to your MATLAB or Octave path:
     *   `<MIPS>/lib`
     *   `<MIPS>/lib/t`
+    *   `<MIPS>/examples`
 
 3.  At the MATLAB/Octave prompt, type `test_mips` to run the test suite and
     verify that MIPS is properly installed and functioning. The result
