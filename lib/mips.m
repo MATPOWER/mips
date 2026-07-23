@@ -219,7 +219,7 @@ function [x, f, eflag, output, lambda] = mips(f_fcn, x0, A, l, u, xmin, xmax, gh
 %   pp. 1185-1193. :doi:`10.1109/TPWRS.2007.901301`
 
 %   MIPS
-%   Copyright (c) 2009-2024, Power Systems Engineering Research Center (PSERC)
+%   Copyright (c) 2009-2026, Power Systems Engineering Research Center (PSERC)
 %   by Ray Zimmerman, PSERC Cornell
 %
 %   This file is part of MIPS.
@@ -482,12 +482,12 @@ end
 if opt.verbose
     if opt.step_control, s = '-sc'; else, s = ''; end
     v = mipsver('all');
-    fprintf('MATPOWER Interior Point Solver -- MIPS%s, Version %s, %s\n (using %s linear solver)', ...
+    mp_printf('MATPOWER Interior Point Solver -- MIPS%s, Version %s, %s\n (using %s linear solver)', ...
         s, v.Version, v.Date, ls);
     if opt.verbose > 1
-        fprintf('\n it    objective   step size   feascond     gradcond     compcond     costcond  ');
-        fprintf('\n----  ------------ --------- ------------ ------------ ------------ ------------');
-        fprintf('\n%3d  %12.8g %10s %12g %12g %12g %12g', ...
+        mp_printf('\n it    objective   step size   feascond     gradcond     compcond     costcond  ');
+        mp_printf('\n----  ------------ --------- ------------ ------------ ------------ ------------');
+        mp_printf('\n%3d  %12.8g %10s %12g %12g %12g %12g', ...
             i, f/opt.cost_mult, '', feascond, gradcond, compcond, costcond);
     end
 end
@@ -495,7 +495,7 @@ if feascond < opt.feastol && gradcond < opt.gradtol && ...
                 compcond < opt.comptol && costcond < opt.costtol
     converged = 1;
     if opt.verbose
-        fprintf('\nConverged!\n');
+        mp_printf('\nConverged!\n');
     end
 end
 
@@ -508,7 +508,7 @@ while (~converged && i < opt.max_it)
     lambda = struct('eqnonlin', lam(1:neqnln), 'ineqnonlin', mu(1:niqnln));
     if nonlinear
         if isempty(hess_fcn)
-            fprintf('mips: Hessian evaluation via finite differences not yet implemented.\n       Please provide your own hessian evaluation function.');
+            mp_printf('mips: Hessian evaluation via finite differences not yet implemented.\n       Please provide your own hessian evaluation function.');
         end
         Lxx = hess_fcn(x, lambda, opt.cost_mult);
     else
@@ -527,7 +527,7 @@ while (~converged && i < opt.max_it)
 %     ];
 %     rc = 1/condest(AAA);
 %     if rc < 1e-22
-%         fprintf('my RCOND = %g\n', rc);
+%         mp_printf('my RCOND = %g\n', rc);
 %         n = size(AAA, 1);
 %         AAA = AAA + 1e-3 * speye(n,n);
 %     end
@@ -535,7 +535,7 @@ while (~converged && i < opt.max_it)
 %     dxdlam = AAA \ bbb;
     if any(isnan(dxdlam)) || norm(dxdlam) > max_stepsize
         if opt.verbose
-            fprintf('\nNumerically Failed\n');
+            mp_printf('\nNumerically Failed\n');
         end
         eflag = -1;
         break;
@@ -598,7 +598,7 @@ while (~converged && i < opt.max_it)
             end
             L1 = f1 + lam' * g1 + mu' * (h1+z) - gamma * sum(log(z));
             if opt.verbose > 2
-                fprintf('\n   %3d            %10g', -j, norm(dx1));
+                mp_printf('\n   %3d            %10g', -j, norm(dx1));
             end
             rho = (L1 - L) / (Lx' * dx1 + 0.5 * dx1' * Lxx * dx1);
             if rho > rho_min && rho < rho_max
@@ -676,20 +676,20 @@ while (~converged && i < opt.max_it)
     end
 
     if opt.verbose > 1
-        fprintf('\n%3d  %12.8g %10.5g %12g %12g %12g %12g', ...
+        mp_printf('\n%3d  %12.8g %10.5g %12g %12g %12g %12g', ...
             i, f/opt.cost_mult, norm(dx), feascond, gradcond, compcond, costcond);
     end
     if feascond < opt.feastol && gradcond < opt.gradtol && ...
                     compcond < opt.comptol && costcond < opt.costtol
         converged = 1;
         if opt.verbose
-            fprintf('\nConverged!\n');
+            mp_printf('\nConverged!\n');
         end
     else
         if any(isnan(x)) || alphap < alpha_min || alphad < alpha_min || ...
                 gamma < eps || gamma > 1/eps
             if opt.verbose
-                fprintf('\nNumerically Failed\n');
+                mp_printf('\nNumerically Failed\n');
             end
             eflag = -1;
             break;
@@ -703,7 +703,7 @@ end
 
 if opt.verbose
     if ~converged
-        fprintf('\nDid not converge in %d iterations.\n', i);
+        mp_printf('\nDid not converge in %d iterations.\n', i);
     end
 end
 

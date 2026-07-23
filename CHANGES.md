@@ -2,6 +2,14 @@ Change history for MIPS
 =======================
 
 
+since 1.5.2
+-----------
+
+#### 7/23/26
+  - Use `mp_printf()`, recently included in [MP-Test](4), in place of
+    `fprintf()` everywhere to allow redirecting of console output.
+
+
 Version 1.5.2 - *July 12, 2025*
 -------------------------------
 
@@ -304,3 +312,4 @@ Version 1.0b1 - *Dec 24, 2009* (released with MATPOWER 4.0b1)
 [1]: https://travis-ci.org
 [2]: https://matpower.org/doc/mips/
 [3]: https://github.com/MATPOWER/mips/issues/4
+[4]: https://github.com/MATPOWER/mptest
