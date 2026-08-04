@@ -323,7 +323,7 @@ if have_b
                     pardisofree(p);
                 end
             otherwise
-                warning('mplinsolve: ''%s'' is not a valid value for SOLVER, using default.', solver);
+                mp_warning('mplinsolve: ''%s'' is not a valid value for SOLVER, using default.', solver);
                 x = A \ b;
         end
     end

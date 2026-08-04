@@ -145,7 +145,7 @@
 \newcommand{\mipsurl}[0]{https://github.com/MATPOWER/mips}
 \newcommand{\mipslink}[0]{\href{\mipsurl}{\mips{}}}
 \newcommand{\mipsname}[0]{{{\bf M}{\sc atpower} \textbf{I}nterior \textbf{P}oint \textbf{S}olver}}
-\newcommand{\mipsver}[0]{1.5.2}
+\newcommand{\mipsver}[0]{1.5.3-dev}
 \newcommand{\mpom}[0]{\mbox{MP-Opt-Model}}
 \newcommand{\mpomurl}[0]{https://github.com/MATPOWER/mp-opt-model}
 \newcommand{\mpomlink}[0]{\href{\mpomurl}{\mpom{}}}
@@ -228,7 +228,7 @@
 \title{\mipsname{}\\\mips{} \mipsver{}\\
 User's Manual}
 \author{Ray~D.~Zimmerman \and Hongye~Wang}
-\date{July 12, 2025} % comment this line to display the current date
+%\date{July 12, 2025} % comment this line to display the current date
 %\date{December 14, 2011\thanks{Second revision. First revision was December 13, 2011}} % comment this line to display the current date
 
 %%% BEGIN DOCUMENT
@@ -366,8 +366,8 @@ The \mips{} GitHub project hosts the public Git code repository as well as a pub
 To use \mips{} \mipsver{} you will need:
 \begin{itemize}
 \item \matlab{}\textsuperscript{\tiny \textregistered} version 7 (R14) or later\footnote{\matlab{} is available from The MathWorks, Inc. (\url{https://www.mathworks.com/}). \matlab{} is a registered trademark of The MathWorks, Inc.}, or
-\item GNU Octave version 3.4 or later\footnote{GNU Octave \cite{octave} is free software, available online at \url{https://octave.org}. \mips{} \mipsver{} may work on earlier versions of Octave, but it has not been tested on versions prior to 3.4.}
-\item \mptestlink{} version 7.1 or later.\footnote{\mptest{} is available at \url{\mptesturl}.}
+\item GNU Octave version 4.2 or later\footnote{GNU Octave \cite{octave} is free software, available online at \url{https://octave.org}.}
+\item \mptestlink{} version 8.2 or later.\footnote{\mptest{} is available at \url{\mptesturl}.}
 \end{itemize}
 
 For the hardware requirements, please refer to the system requirements for the version of \matlab{}\footnote{\url{https://www.mathworks.com/support/sysreq/previous_releases.html}} or Octave that you are using.
@@ -1356,6 +1356,17 @@ The \href{https://matpower.org/docs/MIPS-manual-1.5.2.pdf}{\mips{} 1.5.2 User's 
 \subsubsection*{New Features}
 \begin{itemize}
 \item New feature detection function \code{have\_feature\_mips()}, providing implementation of \codeq{mips} tag for \code{have\_feature()}.
+\end{itemize}
+
+
+\subsection{Version 1.5.3 -- released ??? ??, 202?}
+\label{app:v153}
+
+The \href{https://matpower.org/docs/MIPS-manual-1.5.3.pdf}{\mips{} 1.5.3 User's Manual} is available online.\footnote{\url{https://matpower.org/docs/MIPS-manual-1.5.3.pdf}}
+
+\subsubsection*{New Features}
+\begin{itemize}
+\item Support for redirecting console output via \code{mp.logger} by replacing \code{fprintf()} and \code{warning()} everywhere with \code{mp\_printf()} and \code{mp\_warning()}, respectively. Requires \mptestlink{} 8.2 or later.
 \end{itemize}
 
 

@@ -12,8 +12,8 @@ System Requirements
 -------------------
 
 *   [MATLAB][4] version 7 (R14) or later, or
-*   [GNU Octave][5] version 3.4 or later
-*   [MP-Test][6] version 7.1 or later
+*   [GNU Octave][5] version 4.2 or later
+*   [MP-Test][6] version 8.2 or later
 
 
 Installation

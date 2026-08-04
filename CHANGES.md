@@ -5,9 +5,10 @@ Change history for MIPS
 since 1.5.2
 -----------
 
-#### 7/23/26
-  - Use `mp_printf()`, recently included in [MP-Test](4), in place of
-    `fprintf()` everywhere to allow redirecting of console output.
+#### 8/4/26
+  - Add support for redirecting console output via `mp.logger` by replacing
+    `fprintf()` and `warning()` everywhere with `mp_printf()` and
+    `mp_warning()`, respectively. Requires [MP-Test](4) 8.2 or later.
 
 
 Version 1.5.2 - *July 12, 2025*
